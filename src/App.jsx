@@ -1,14 +1,33 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import { Laporan } from "./pages/Laporan";
+import Navbar from "./components/Navbar/Navbar";
+import "./App.css";
+import { useState } from "react";
+import React from "react";
+import Laporkan from "./pages/Laporkan";
+import Footer from "./components/Footer/Footer";
 
 function App() {
+  const [isLogin, setIsLogin] = useState(false);
+
+  function handleLogin() {
+    setIsLogin(!isLogin);
+  }
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/laporan" element={<Laporan />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <Navbar isLogin={isLogin} />
+      <button onClick={handleLogin} className="p-4 bg-blue-500 text-white rounded">
+        {" "}
+        Cek Login bang ko
+      </button>
+
+      <BrowserRouter>
+        <Routes>
+          <Route path="/laporan" element={<Laporan />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
+    </>
   );
 }
 
