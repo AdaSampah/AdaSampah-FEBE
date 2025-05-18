@@ -18,7 +18,7 @@ export default function Navbar({ isLogin }) {
     setMobileProfileDrawerOpen(false);
 
   return (
-    <header className="relative bg-white shadow-md">
+    <header className="relative bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-screen-xl mx-auto w-full flex items-center justify-between px-4 py-3 h-[72px] md:h-[104px]">
         {/* Logo kiri */}
         <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
