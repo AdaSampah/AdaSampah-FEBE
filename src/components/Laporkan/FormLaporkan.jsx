@@ -1,37 +1,62 @@
 import addPhoto from "../../assets/Laporkan/addPhoto.svg";
 import send from "../../assets/Laporkan/send.svg";
-import lokasi from "../../assets/Laporkan/tanda.svg"
+import lokasi from "../../assets/Laporkan/tanda.svg";
 
 export default function FormLaporkan() {
-    const file = false;
-    const loading = false;
-    return(
-        <main>
+  const file = false;
+  const loading = false;
+  return (
+    <main>
       <div className="sm:p-10 p-4">
         <div className="bg-white 2xl:max-w-[940px] lg:max-w-[800px] md:max-w-[680px] max-w-[640px] h-auto md:shadow-lg shadow-md md:rounded-3xl rounded-xl mx-auto 2xl:translate-y-[-620px] translate-y-[-320px]">
           <form onSubmi="" className="sm:p-20 p-8">
-            <h3 className="md:text-[32px] sm:text-subheadline text-body md:leading-normal leading-normal  text-center font-bold py-6 mb-10">Tuliskan laporan secara jelas dan detail</h3>
+            <h3 className="md:text-[32px] sm:text-subheadline text-body md:leading-normal leading-normal  text-center font-bold py-6 mb-10">
+              Tuliskan laporan secara jelas dan detail
+            </h3>
             {file ? (
               <>
-                <p className="md:text-body text-normal font-semibold my-3">Bukti Kejadian</p>
-                <img src="" alt="BuktiFoto" className="w-full max-h-[200px] object-cover" />
+                <p className="md:text-body text-normal font-semibold my-3">
+                  Bukti Kejadian
+                </p>
+                <img
+                  src=""
+                  alt="BuktiFoto"
+                  className="w-full max-h-[200px] object-cover"
+                />
               </>
             ) : (
               <label htmlFor="imageLaporkan">
-                <p className="md:text-body text-normal font-semibold my-3">Bukti Kejadian</p>
-                <div className="border-dashed border-2 border-inputBorder rounded-lg cursor-pointer max-h-[200px]" onDrop="" onDragOver="">
+                <p className="md:text-body text-normal font-semibold my-3">
+                  Bukti Kejadian
+                </p>
+                <div className="border-dashed border-2 border-inputBorder rounded-lg cursor-pointer max-h-[200px]">
                   <div className="p-10 flex flex-col justify-center items-center">
-                    <img src={addPhoto} alt="iconAddImg" className="md:w-8 w-6 mb-2" />
-                    <p className="md:text-normal text-smallText text-center">Drag and drop foto atau klik untuk upload</p>
-                    <p className="md:text-normal text-smallText  text-center text-[#6B7280]">JPEG, JPG, PNGF (5MB maximum)</p>
+                    <img
+                      src={addPhoto}
+                      alt="iconAddImg"
+                      className="md:w-8 w-6 mb-2"
+                    />
+                    <p className="md:text-normal text-smallText text-center">
+                      Drag and drop foto atau klik untuk upload
+                    </p>
+                    <p className="md:text-normal text-smallText  text-center text-[#6B7280]">
+                      JPEG, JPG, PNGF (5MB maximum)
+                    </p>
                   </div>
-                  <input type="file" id="imageLaporkan" className="hidden" onChange="" />
+                  <input
+                    type="file"
+                    id="imageLaporkan"
+                    className="hidden"
+                    onChange=""
+                  />
                 </div>
               </label>
             )}
             <div className="mt-4">
               <label htmlFor="deskripsiLaporan">
-                <p className="md:text-body text-normal font-semibold py-3">Deskripsi</p>
+                <p className="md:text-body text-normal font-semibold py-3">
+                  Deskripsi
+                </p>
               </label>
               <textarea
                 cols="30"
@@ -45,35 +70,40 @@ export default function FormLaporkan() {
             </div>
             <div className="mt-4">
               <label htmlFor="deskripsiLaporan">
-                <p className="md:text-body text-normal font-semibold py-3">Deskripsi</p>
+                <p className="md:text-body text-normal font-semibold py-3">
+                  Deskripsi
+                </p>
               </label>
               <div className="mt-4">
-                
                 <div className="flex gap-3">
-                    <input
-                    type="number" 
+                  <input
+                    type="number"
                     id="latitude"
                     className="w-full p-1 block outline-none rounded-lg border-2 border-inputBorder font-medium"
                     placeholder="Latitude"
                     onChange=""
-                    />
-                    <input
-                    type="number"  
+                  />
+                  <input
+                    type="number"
                     id="longitude"
                     className="w-full p-1 block outline-none rounded-lg border-2 border-inputBorder font-medium"
                     placeholder="Longitude"
                     onChange=""
-                    />
+                  />
                 </div>
                 <button className="w-full mt-3 flex py-2 gap-2 justify-center items-center font-medium bg-[#096B68] text-white rounded-[8px]">
-                    <img src={lokasi} alt="send" className="w-8" />
-                    <span className="flex items-center">Gunakan Lokasi Saat Ini</span>
+                  <img src={lokasi} alt="send" className="w-8" />
+                  <span className="flex items-center">
+                    Gunakan Lokasi Saat Ini
+                  </span>
                 </button>
-                </div>
-
+              </div>
             </div>
             <div className="flex justify-end mt-8 ">
-              <button type="submit" className="flex p-4 gap-2 justify-center items-center py-3 bg-[#096B68] text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100">
+              <button
+                type="submit"
+                className="flex p-4 gap-2 justify-center items-center py-3 bg-[#096B68] text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100"
+              >
                 <span>{loading ? "Mengirim" : "Kirim Laporan "}</span>
                 <img src={send} alt="send" className="w-6" />
               </button>
@@ -82,5 +112,5 @@ export default function FormLaporkan() {
         </div>
       </div>
     </main>
-    )
+  );
 }
