@@ -1,6 +1,11 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Laporan } from "./pages/Laporan";
 import Navbar from "./components/Navbar/Navbar";
 import "./App.css";
 import { useState } from "react";
+import React from "react";
+import Laporkan from "./pages/Laporkan";
+import Footer from "./components/Footer/Footer";
 
 import React from "react";
 import Laporkan from "./pages/Laporkan";
@@ -16,19 +21,20 @@ function App() {
   return (
     <>
       <Navbar isLogin={isLogin} />
+      <button
+        onClick={handleLogin}
+        className="p-4 bg-blue-500 text-white rounded"
+      >
+        {" "}
+        Cek Login bang ko
+      </button>
 
-      <Router>
-        <Laporkan />
-        <button
-          onClick={handleLogin}
-          className="p-4 bg-blue-500 text-white rounded"
-        >
-          {" "}
-          Cek Login bang ko
-        </button>
-
-        {<Footer />}
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/laporan" element={<Laporan />} />
+        </Routes>
+      </BrowserRouter>
+      <Footer />
     </>
   );
 }
