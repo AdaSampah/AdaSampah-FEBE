@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../../assets/Navbar/vite.svg";
 import logout from "../../assets/Navbar/logout.svg";
 import news from "../../assets/Navbar/news.svg";
@@ -11,6 +12,7 @@ export default function Navbar({ isLogin }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileProfileDrawerOpen, setMobileProfileDrawerOpen] = useState(false);
   const profileDropdownRef = useRef(null);
+  const location = useLocation();
   const handleToggleMenu = () => setMenuOpen((prev) => !prev);
   const handleProfileClick = () => setProfileDrawerOpen(true);
   const handleMobileProfileClick = () => setMobileProfileDrawerOpen(true);
@@ -41,7 +43,7 @@ export default function Navbar({ isLogin }) {
         : "bg-transparent text-white shadow-none"
     }
     transition-colors transition-shadow`;
-  const buttonMasuk = `hover:brightness-90 duration-150 w-[95px] h-[51px] px-6 py-4 rounded-[30px] border ${
+  const buttonMasuk = `hover:brightness-90 font-bold duration-150 w-[95px] h-[51px] px-6 py-4 rounded-[30px] border ${
     scrolled ? "border-black text-black" : "border-white text-white"
   } justify-center items-center gap-2.5 inline-flex`;
 
@@ -69,57 +71,77 @@ export default function Navbar({ isLogin }) {
         {/* Logo kiri */}
         <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
           <img src={Logo} alt="Logo" className="w-8 h-8 md:w-10 md:h-10" />
-          <a
-            href="/"
+          <Link
+            to="/"
             className={`font-extrabold text-xl md:text-2xl ${
-              scrolled ? "text-[#096B68]" : "text-white drop-shadow"
+              scrolled ? "text-[#24BBB1]" : "text-white drop-shadow"
             }`}
           >
             AdaSampah
-          </a>
+          </Link>
         </div>
         {/* Desktop menu */}
         <nav className="hidden md:flex flex-1 justify-center">
           <ul className="flex gap-6">
             <li>
-              <a
-                href="/"
-                className={`font-semibold transition-colors hover:text-[#096B68] ${
-                  scrolled ? "text-black" : "text-white"
-                }`}
+              <Link
+                to="/"
+                className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+                  ${
+                    location.pathname === "/"
+                      ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                      : scrolled
+                      ? "text-black"
+                      : "text-white"
+                  }`}
               >
                 Beranda
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className={`font-semibold transition-colors hover:text-[#096B68] ${
-                  scrolled ? "text-black" : "text-white"
-                }`}
+              <Link
+                to="/laporkan"
+                className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+                  ${
+                    location.pathname === "/laporkan"
+                      ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                      : scrolled
+                      ? "text-black"
+                      : "text-white"
+                  }`}
               >
                 Laporkan
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className={`font-semibold transition-colors hover:text-[#096B68] ${
-                  scrolled ? "text-black" : "text-white"
-                }`}
+              <Link
+                to="/laporan"
+                className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+                  ${
+                    location.pathname === "/laporan"
+                      ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                      : scrolled
+                      ? "text-black"
+                      : "text-white"
+                  }`}
               >
                 Laporan
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className={`font-semibold transition-colors hover:text-[#096B68] ${
-                  scrolled ? "text-black" : "text-white"
-                }`}
+              <Link
+                to="#"
+                className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+                  ${
+                    location.pathname === "/tentang"
+                      ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                      : scrolled
+                      ? "text-black"
+                      : "text-white"
+                  }`}
               >
                 Tentang Kami
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
@@ -179,9 +201,9 @@ export default function Navbar({ isLogin }) {
               </a>
               <a
                 href="#"
-                className={`border border-[#096B68] rounded-[40px] px-5 py-2 text-center transition-colors flex items-center justify-center ${
+                className={`border border-white rounded-[40px] font-bold px-5 py-2 text-center transition-colors flex items-center justify-center ${
                   scrolled
-                    ? "bg-[#096B68] text-white hover:bg-[#064e4c]"
+                    ? "bg-[#24BBB1] text-white hover:bg-[#064e4c]"
                     : "bg-white text-black hover:bg-gray-200"
                 }`}
                 onClick={() => setMenuOpen(false)}
@@ -220,40 +242,60 @@ export default function Navbar({ isLogin }) {
             </div>
             <ul className="flex flex-col gap-2 px-6 py-6 flex-1 bg-white">
               <li>
-                <a
-                  href="/"
-                  className="block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#096B68]"
+                <Link
+                  to="/"
+                  className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                    ${
+                      location.pathname === "/"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        : ""
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   Beranda
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#096B68]"
+                <Link
+                  to="/laporkan"
+                  className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                    ${
+                      location.pathname === "/laporkan"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        : ""
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   Laporkan
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#096B68]"
+                <Link
+                  to="/laporan"
+                  className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                    ${
+                      location.pathname === "/laporan"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        : ""
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   Laporan
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#096B68]"
+                <Link
+                  to="#"
+                  className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                    ${
+                      location.pathname === "/tentang"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        : ""
+                    }`}
                   onClick={() => setMenuOpen(false)}
                 >
                   Tentang Kami
-                </a>
+                </Link>
               </li>
             </ul>
             <div className="px-6 pb-8 bg-white">
@@ -316,14 +358,14 @@ export default function Navbar({ isLogin }) {
                 <div className="flex flex-col gap-3">
                   <a
                     href="#"
-                    className="border border-[#096B68] text-[#096B68] px-5 py-2 rounded-[40px] text-center transition-colors hover:bg-[#e0f7f6] flex items-center justify-center min-h-[44px]"
+                    className="border border-[#24BBB1] text-[#24BBB1] px-5 py-2 font-bold rounded-[40px] text-center transition-colors hover:bg-[#e0f7f6] flex items-center justify-center min-h-[44px]"
                     onClick={() => setMenuOpen(false)}
                   >
                     Login
                   </a>
                   <a
                     href="#"
-                    className="border border-[#096B68] bg-[#096B68] text-white px-5 py-2 rounded-[40px] text-center transition-colors hover:bg-[#064e4c] flex items-center justify-center min-h-[44px]"
+                    className="border border-[#24BBB1] bg-[#24BBB1] font-bold text-white px-5 py-2 rounded-[40px] text-center transition-colors hover:bg-[#064e4c] flex items-center justify-center min-h-[44px]"
                     onClick={() => setMenuOpen(false)}
                   >
                     Register
