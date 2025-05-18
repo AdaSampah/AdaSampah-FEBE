@@ -1,0 +1,13 @@
+:root {
+  --mainColor: #096b69;
+  --secondColor: #129990;
+  --border: #b0b0b0;
+  /* Font Size */
+  --headline1: "80px";
+  --headline2: "64px";
+  --subheadline: "24px";
+  --body: "20px";
+  --normal: "16px";
+  --smallText: "14px";
+  --verySmallText: "12px";
+}
