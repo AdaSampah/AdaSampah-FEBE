@@ -4,6 +4,7 @@ import send from "../../assets/Laporkan/send.svg";
 
 export default function FormLaporkan() {
     const file = false;
+    const loading = false;
     return(
         <main>
       <div className="sm:p-10 p-4">
@@ -56,7 +57,7 @@ export default function FormLaporkan() {
             </div>
             <div className="flex justify-end mt-8">
               <button type="submit" className="flex gap-2 justify-center items-center py-3 px-5 bg-greenMain text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100">
-                <span></span>
+                <span>{loading ? "Mengirim" : "Kirim Laporan"}</span>
                 <img src={send} alt="send" className="w-6" />
               </button>
             </div>

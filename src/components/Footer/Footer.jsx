@@ -28,7 +28,7 @@ export default function Footer() {
              </a>
            </div>
            <div>
-             <p className="font-extrabold text-white my-3">ECOTECTION</p>
+             <p className="font-extrabold text-white my-3">AdaSampah</p>
  
              <div className="text-[#9C9C9C] font-semibold cursor-pointer">
                <Link to="">
