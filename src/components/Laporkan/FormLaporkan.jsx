@@ -1,6 +1,6 @@
 import addPhoto from "../../assets/Laporkan/addPhoto.svg";
 import send from "../../assets/Laporkan/send.svg";
-
+import lokasi from "../../assets/Laporkan/tanda.svg"
 
 export default function FormLaporkan() {
     const file = false;
@@ -44,20 +44,37 @@ export default function FormLaporkan() {
               />
             </div>
             <div className="mt-4">
-              <label htmlFor="alamat Detail">
-                <p className="md:text-body text-normal font-semibold py-3">Alamat Detail</p>
+              <label htmlFor="deskripsiLaporan">
+                <p className="md:text-body text-normal font-semibold py-3">Deskripsi</p>
               </label>
-              <input
-                type="text"
-                id="alamat Detail"
-                className="w-full p-4 block outline-none rounded-lg border-2 border-inputBorder font-medium"
-                placeholder="Contoh : Jl Mangga 1, didepan mall A"
-                onChange={(e) => setAlamatDetail(e.target.value)}
-              />
+              <div className="mt-4">
+                
+                <div className="flex gap-3">
+                    <input
+                    type="number" 
+                    id="latitude"
+                    className="w-full p-1 block outline-none rounded-lg border-2 border-inputBorder font-medium"
+                    placeholder="Latitude"
+                    onChange=""
+                    />
+                    <input
+                    type="number"  
+                    id="longitude"
+                    className="w-full p-1 block outline-none rounded-lg border-2 border-inputBorder font-medium"
+                    placeholder="Longitude"
+                    onChange=""
+                    />
+                </div>
+                <button className="w-full mt-3 flex py-2 gap-2 justify-center items-center font-medium bg-[#096B68] text-white rounded-[8px]">
+                    <img src={lokasi} alt="send" className="w-8" />
+                    <span className="flex items-center">Gunakan Lokasi Saat Ini</span>
+                </button>
+                </div>
+
             </div>
-            <div className="flex justify-end mt-8">
-              <button type="submit" className="flex gap-2 justify-center items-center py-3 px-5 bg-greenMain text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100">
-                <span>{loading ? "Mengirim" : "Kirim Laporan"}</span>
+            <div className="flex justify-end mt-8 ">
+              <button type="submit" className="flex p-4 gap-2 justify-center items-center py-3 bg-[#096B68] text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100">
+                <span>{loading ? "Mengirim" : "Kirim Laporan "}</span>
                 <img src={send} alt="send" className="w-6" />
               </button>
             </div>
