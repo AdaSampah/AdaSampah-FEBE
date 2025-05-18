@@ -14,7 +14,12 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
+<<<<<<< HEAD
     "react-router-dom": "^6.30.0",
+=======
+    "react-router-dom": "^7.6.0",
+    "sweetalert": "^2.1.2",
+>>>>>>> 620845abb12179d4eafbdf79a9d329e50f5ddd8f
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
