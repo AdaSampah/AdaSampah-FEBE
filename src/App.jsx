@@ -5,6 +5,7 @@ import "./App.css";
 import React, { useState } from "react";
 import Laporkan from "./pages/Laporkan";
 import Footer from "./components/Footer/Footer";
+import Home from "./pages/Home";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -16,14 +17,14 @@ function App() {
     <BrowserRouter>
       <Navbar isLogin={isLogin} />
       <Routes>
-        <Route path="/" element={<div />} />{" "}
+        <Route path="/" element={<Home />} />
         {/* Tambahkan route kosong untuk "/" */}
         <Route path="/laporan" element={<Laporan />} />
         <Route path="/laporkan" element={<Laporkan />} />
       </Routes>
       <button
         onClick={handleLogin}
-        className="p-4 bg-blue-500 text-white rounded"
+        className="p-4 bg-blue-500 text-white rounded mt-9"
       >
         {" "}
         Cek Login bang ko

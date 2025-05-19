@@ -247,7 +247,7 @@ export default function Navbar({ isLogin }) {
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
                       location.pathname === "/"
-                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
@@ -261,7 +261,7 @@ export default function Navbar({ isLogin }) {
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
                       location.pathname === "/laporkan"
-                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
@@ -275,7 +275,7 @@ export default function Navbar({ isLogin }) {
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
                       location.pathname === "/laporan"
-                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
@@ -289,7 +289,7 @@ export default function Navbar({ isLogin }) {
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
                       location.pathname === "/tentang"
-                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
