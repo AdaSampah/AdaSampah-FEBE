@@ -16,7 +16,6 @@ export default function FormLaporkan() {
     const [imgSource, setImageSource] =useState("galeri");
     useEffect(() => {
         if (!mapRef.current) {
-            console.log("useEffect: Initializing map...");
 
             const map = createMap('#map', { zoom: 14, center: [-7.7944973, 110.4070047], locate: true });
             mapRef.current = map;  
@@ -25,7 +24,6 @@ export default function FormLaporkan() {
             setLatitude(lat);
             setLongitude(lng);
 
-            console.log("useEffect: Map initialized at coordinates:", lat, lng);
 
             const marker = addMarker(map, [lat, lng], { draggable: true });
             setMarkerInstance(marker);
@@ -93,14 +91,15 @@ export default function FormLaporkan() {
 
     // Function to remove the selected image
     const handleRemoveImage = () => {
-        setFile(null); // Clear the selected file
+        setFile(null);
     };
-
-    const handleEditImage = () => {
+ const handleEditImage = () => {
+   
         if (fileInputRef.current) {
-            fileInputRef.current.click(); // Trigger file input click
+            fileInputRef.current.click();
         }
     };
+
     
     return (
         <section>
@@ -120,6 +119,7 @@ export default function FormLaporkan() {
                                     >
                                         Hapus Gambar
                                     </button>
+                                   <label htmlFor="editGambar">
                                     <button 
                                         type="button" 
                                         onClick={handleEditImage} 
@@ -127,6 +127,14 @@ export default function FormLaporkan() {
                                     >
                                         Edit Gambar
                                     </button>
+                                    <input
+                                        ref={fileInputRef} 
+                                        type="file" 
+                                        id="editGambar" 
+                                        className="hidden" 
+                                        onChange={handleFileInputChange} 
+                                    />
+                                    </label>
                                 </div>
                             </>
                         ) : (
