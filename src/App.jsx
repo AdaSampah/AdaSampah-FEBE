@@ -29,8 +29,7 @@ function App() {
 
     <Router>
       <Laporkan/>
-      
-      {<Footer />}
+      <Footer />
     </Router>
     </>
   );
