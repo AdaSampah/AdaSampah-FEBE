@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import Laporkan from "./pages/Laporkan";
 import Footer from "./components/Footer/Footer";
 import Home from "./pages/Home";
+import EditProfile from "./pages/EditProfile";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -15,12 +17,13 @@ function App() {
   }
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Navbar isLogin={isLogin} />
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Tambahkan route kosong untuk "/" */}
         <Route path="/laporan" element={<Laporan />} />
         <Route path="/laporkan" element={<Laporkan />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
       </Routes>
       <button
         onClick={handleLogin}

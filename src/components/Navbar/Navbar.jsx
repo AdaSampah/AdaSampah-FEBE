@@ -29,6 +29,9 @@ export default function Navbar({ isLogin }) {
       }
     }
 
+    // Cek posisi scroll saat mount
+    handleScroll();
+
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -169,20 +172,30 @@ export default function Navbar({ isLogin }) {
                     </p>
                     <hr />
                     <div className="flex-1">
-                      <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
-                        <img src={news} alt="news" />
-                        <p>Laporan Saya</p>
-                      </div>
-                      <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
-                        <img
-                          src={editProfile}
-                          alt="edit"
-                          className="md:w-7 w-5"
-                        />
-                        <p className="md:text-normal text-smallText">
-                          Edit Profile
-                        </p>
-                      </div>
+                      <Link
+                        to="/laporan"
+                        onClick={() => setProfileDrawerOpen(false)}
+                      >
+                        <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
+                          <img src={news} alt="news" />
+                          <p>Laporan Saya</p>
+                        </div>
+                      </Link>
+                      <Link
+                        to="/edit-profile"
+                        onClick={() => setProfileDrawerOpen(false)}
+                      >
+                        <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
+                          <img
+                            src={editProfile}
+                            alt="edit"
+                            className="md:w-7 w-5"
+                          />
+                          <p className="md:text-normal text-smallText">
+                            Edit Profile
+                          </p>
+                        </div>
+                      </Link>
                       <div className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
                         <img src={logout} alt="logout" className="md:w-7 w-5" />
                         <p className="font-semibold md:text-normal text-smallText">
@@ -329,16 +342,21 @@ export default function Navbar({ isLogin }) {
                             <img src={news} alt="news" />
                             <p>Laporan Saya</p>
                           </div>
-                          <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
-                            <img
-                              src={editProfile}
-                              alt="news"
-                              className="md:w-7 w-5"
-                            />
-                            <p className="font-semibold md:text-normal text-smallText ">
-                              Edit Profile
-                            </p>
-                          </div>
+                          <Link
+                            to="/edit-profile"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            <div className="text-black flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
+                              <img
+                                src={editProfile}
+                                alt="news"
+                                className="md:w-7 w-5"
+                              />
+                              <p className="font-semibold md:text-normal text-smallText ">
+                                Edit Profile
+                              </p>
+                            </div>
+                          </Link>
                           <div className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
                             <img
                               src={logout}

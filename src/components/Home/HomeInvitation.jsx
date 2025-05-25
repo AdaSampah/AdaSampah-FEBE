@@ -8,7 +8,7 @@ export default function HomeInvitation() {
         <img
           src={Invitation}
           alt="Invitation Image"
-          className="w-full h-auto object-contain rounded-2xl shadow-md"
+          className="w-full h-auto object-contain rounded-2xl"
         />
       </div>
       <div className="w-full max-w-xl md:max-w-[400px] lg:max-w-[566px] flex flex-col items-center md:items-start text-center md:text-left">
