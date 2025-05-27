@@ -1,10 +1,10 @@
 // map.js
 
-import { map, tileLayer, Icon, icon, marker, popup, latLng } from 'leaflet';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { MAP_SERVICE_API_KEY } from '../config';
+import { map, tileLayer, Icon, icon, marker, popup, latLng } from "leaflet";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { MAP_SERVICE_API_KEY } from "../config";
 
 // Fungsi untuk menambahkan event listener ke peta
 export const addMapEventListener = (mapInstance, eventName, callback) => {
@@ -15,29 +15,29 @@ export const addMapEventListener = (mapInstance, eventName, callback) => {
 export const getPlaceNameByCoordinate = async (latitude, longitude) => {
   try {
     const url = new URL(`https://api.maptiler.com/geocoding/${longitude},${latitude}.json`);
-    url.searchParams.set('key', MAP_SERVICE_API_KEY);
-    url.searchParams.set('language', 'id');
-    url.searchParams.set('limit', '1');
+    url.searchParams.set("key", MAP_SERVICE_API_KEY);
+    url.searchParams.set("language", "id");
+    url.searchParams.set("limit", "1");
 
     const response = await fetch(url);
     const json = await response.json();
 
-    const place = json.features[0].place_name.split(', ');
-    return [place.at(-2), place.at(-1)].map((name) => name).join(', ');
+    const place = json.features[0].place_name.split(", ");
+    return [place.at(-2), place.at(-1)].map((name) => name).join(", ");
   } catch (error) {
-    console.error('getPlaceNameByCoordinate: error:', error);
+    console.error("getPlaceNameByCoordinate: error:", error);
     return `${latitude}, ${longitude}`;
   }
 };
 
 // Fungsi untuk memeriksa apakah geolocation tersedia
-export const isGeolocationAvailable = () => 'geolocation' in navigator;
+export const isGeolocationAvailable = () => "geolocation" in navigator;
 
 // Fungsi untuk mendapatkan posisi pengguna
 export const getCurrentPosition = (options = {}) => {
   return new Promise((resolve, reject) => {
     if (!isGeolocationAvailable()) {
-      reject('Geolocation API unsupported');
+      reject("Geolocation API unsupported");
       return;
     }
     navigator.geolocation.getCurrentPosition(resolve, reject, options);
@@ -54,7 +54,7 @@ export const createMap = (selector, options = {}) => {
     return mapContainer._leaflet_id;
   }
 
-  const tileOsm = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  const tileOsm = tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
   });
 
@@ -89,7 +89,7 @@ export const createIcon = (options = {}) => {
 export const addMarker = (mapInstance, coordinates, markerOptions = {}, popupOptions = null) => {
   const newMarker = marker(coordinates, {
     icon: createIcon(),
-    alt: 'Marker',
+    alt: "Marker",
     ...markerOptions,
   });
 

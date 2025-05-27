@@ -7,7 +7,7 @@ import shareIcon from "../../assets/Laporan/share.svg";
 import arrowUpIcon from "../../assets/Laporan/arrow_circle_up.svg";
 import editIcon from "../../assets/DetilLaporan/edit.svg";
 import trashIcon from "../../assets/DetilLaporan/trash.svg";
-import Bukti from "../../assets/DetilLaporan/Bukti.png";
+import Bukti from "../../assets/DetilLaporan/bukti.jpg";
 // import Swal from "sweetalert2";
 // import { axiosInstance } from "../../config";
 // import { UserContext } from "../../context/UserContext";
@@ -45,8 +45,8 @@ const DetailKiri = () => {
     }
   };
   return (
-    <div>
-      <div className="cardKu shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] border-inputBorder 2xl:max-w-[690px] md:max-w-[520px] max-w-full  md:rounded-3xl rounded-2xl ">
+    <>
+      <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)]  md:rounded-3xl rounded-2xl flex-1 h-full">
         <div className="p-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -85,7 +85,7 @@ const DetailKiri = () => {
             </p>
           </div>
 
-          <img src={Bukti} alt="buktiFoto" className="2xl:min-w-[600px] md:min-w-[450px] min-w-[250px] md:rounded-2xl rounded-xl cursor-pointer" onClick={() => openModal(Bukti)} />
+          <img src={Bukti} alt="buktiFoto" className="w-full object-cover 2xl:min-w-[600px] md:min-w-[450px] min-w-[250px] max-h-96 md:rounded-2xl rounded-xl cursor-pointer" onClick={() => openModal(Bukti)} />
           <div className="flex items-center justify-between mt-4">
             <div>
               <div className={`flex gap-2 justify-center items-center px-2 py-2 border-[1px] border-[#D7D9DA] rounded-2xl font-semibold cursor-pointer ${isUpvoted ? "bg-[#E2FFF5]" : "bg-[#F1F1F1]"}`}>
@@ -209,7 +209,7 @@ const DetailKiri = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
