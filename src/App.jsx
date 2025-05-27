@@ -6,6 +6,7 @@ import { useState } from "react";
 import React from "react";
 import Laporkan from "./pages/Laporkan";
 import Footer from "./components/Footer/Footer";
+import DetailLaporan from "./pages/DetailLaporan";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -24,9 +25,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/laporan" element={<Laporan />} />
+          <Route path="/laporan/:id" element={<DetailLaporan />} />
+          <Route path="/laporkan" element={<Laporkan />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   );
 }
