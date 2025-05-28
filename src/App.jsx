@@ -9,6 +9,9 @@ import Home from "./pages/Home";
 import EditProfile from "./pages/EditProfile";
 import ScrollToTop from "./components/ScrollToTop";
 import DetailLaporan from "./pages/DetailLaporan";
+import LaporanSaya from "./pages/LaporanSaya";
+import LaporanUser from "./components/LaporanSaya/LaporanUser";
+import LaporanDisimpan from "./components/LaporanSaya/LaporanDisimpan";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -26,6 +29,10 @@ function App() {
         <Route path="/laporan/:id" element={<DetailLaporan />} />
         <Route path="/laporkan" element={<Laporkan />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/" element={<LaporanSaya />}>
+          <Route path="laporan-saya" element={<LaporanUser />} />
+          <Route path="disimpan" element={<LaporanDisimpan />} />
+        </Route>
       </Routes>
       <button onClick={handleLogin} className="p-4 bg-blue-500 text-white rounded mt-9">
         {" "}
