@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { UserContextProvider } from "./context/UserContext";
 import { Laporan } from "./pages/Laporan";
 import Navbar from "./components/Navbar/Navbar";
 import "./App.css";
@@ -12,6 +13,9 @@ import DetailLaporan from "./pages/DetailLaporan";
 import LaporanSaya from "./pages/LaporanSaya";
 import LaporanUser from "./components/LaporanSaya/LaporanUser";
 import LaporanDisimpan from "./components/LaporanSaya/LaporanDisimpan";
+import Education from "./pages/Education";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -20,26 +24,27 @@ function App() {
     setIsLogin(!isLogin);
   }
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <Navbar isLogin={isLogin} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/laporan" element={<Laporan />} />
-        <Route path="/laporan/:id" element={<DetailLaporan />} />
-        <Route path="/laporkan" element={<Laporkan />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/" element={<LaporanSaya />}>
-          <Route path="laporan-saya" element={<LaporanUser />} />
-          <Route path="disimpan" element={<LaporanDisimpan />} />
-        </Route>
-      </Routes>
-      <button onClick={handleLogin} className="p-4 bg-blue-500 text-white rounded mt-9">
-        {" "}
-        Cek Login bang ko
-      </button>
-      <Footer />
-    </BrowserRouter>
+    <UserContextProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/laporan" element={<Laporan />} />
+          <Route path="/laporan/:id" element={<DetailLaporan />} />
+          <Route path="/laporkan" element={<Laporkan />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/" element={<LaporanSaya />}>
+            <Route path="laporan-saya" element={<LaporanUser />} />
+            <Route path="disimpan" element={<LaporanDisimpan />} />
+          </Route>
+          <Route path="/education" element={<Education />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 
