@@ -104,3 +104,17 @@ export const addMarker = (mapInstance, coordinates, markerOptions = {}, popupOpt
 
   return newMarker;
 };
+
+// Menambahkan ekspor default
+const Map = {
+  addMapEventListener,
+  getPlaceNameByCoordinate,
+  isGeolocationAvailable,
+  getCurrentPosition,
+  createMap,
+  changeCamera,
+  createIcon,
+  addMarker,
+};
+
+export default Map;

@@ -39,7 +39,7 @@ export default function Navbar({ isLogin }) {
   }, []);
 
   // Navbar selalu fixed, transisi smooth pada bg, text, shadow
-  const navbarClasses = `w-full left-0 top-0 z-50 fixed transition-all duration-300
+  const navbarClasses = `w-full left-0 top-0 z-50 fixed transition-all duration-300 z-40
     ${
       scrolled
         ? "bg-white text-black shadow-sm"
@@ -133,17 +133,17 @@ export default function Navbar({ isLogin }) {
             </li>
             <li>
               <Link
-                to="#"
+                to="/peta-sebaran"
                 className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
                   ${
-                    location.pathname === "/tentang"
+                    location.pathname === "/peta-sebaran"
                       ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
                       : scrolled
                       ? "text-black"
                       : "text-white"
                   }`}
               >
-                Tentang Kami
+                Peta Sebaran
               </Link>
             </li>
           </ul>
@@ -209,11 +209,11 @@ export default function Navbar({ isLogin }) {
             </>
           ) : (
             <div className="flex gap-4">
-              <a href="#" className={buttonMasuk}>
+              <a href="masuk" className={buttonMasuk}>
                 Login
               </a>
               <a
-                href="#"
+                href="daftar"
                 className={`border border-white rounded-[40px] font-bold px-5 py-2 text-center transition-colors flex items-center justify-center ${
                   scrolled
                     ? "bg-[#24BBB1] text-white hover:bg-[#064e4c]"
@@ -298,16 +298,16 @@ export default function Navbar({ isLogin }) {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/peta-sebaran"
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
-                      location.pathname === "/tentang"
+                      location.pathname === "/peta-sebaran"
                         ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  Tentang Kami
+                  Peta Sebaran
                 </Link>
               </li>
             </ul>
@@ -375,14 +375,14 @@ export default function Navbar({ isLogin }) {
               ) : (
                 <div className="flex flex-col gap-3">
                   <a
-                    href="#"
+                    href="masuk"
                     className="border border-[#24BBB1] text-[#24BBB1] px-5 py-2 font-bold rounded-[40px] text-center transition-colors hover:bg-[#e0f7f6] flex items-center justify-center min-h-[44px]"
                     onClick={() => setMenuOpen(false)}
                   >
                     Login
                   </a>
                   <a
-                    href="#"
+                    href="daftar"
                     className="border border-[#24BBB1] bg-[#24BBB1] font-bold text-white px-5 py-2 rounded-[40px] text-center transition-colors hover:bg-[#064e4c] flex items-center justify-center min-h-[44px]"
                     onClick={() => setMenuOpen(false)}
                   >

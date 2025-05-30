@@ -8,7 +8,7 @@ export default function FormLaporkan() {
     const [latitude, setLatitude] = useState(""); 
     const [longitude, setLongitude] = useState("");  
     const [loading, setLoading] = useState(false); 
-    const [image, setImage] = useState(null);  // State to hold the image file
+    const [image, setImage] = useState(null);  
     const mapRef = useRef(null); 
     const [markerInstance, setMarkerInstance] = useState(null); 
     const [file, setFile] = useState(null);
@@ -237,7 +237,7 @@ export default function FormLaporkan() {
                             <button
                                 type="button"
                                 onClick={handleUseCurrentLocation} 
-                                className="w-full mt-3 flex py-2 gap-2 justify-center items-center font-medium bg-[#129990] text-white rounded-[8px]"
+                                className="w-full mt-3 flex py-2 gap-2 justify-center items-center font-medium bg-[#129990] text-white rounded-[8px] hover:bg-[#096B68]"
                             >
                                 <img src={lokasi} alt="send" className="w-8" />
                                 <span className="flex items-center">Gunakan Lokasi Saat Ini</span>
@@ -246,7 +246,7 @@ export default function FormLaporkan() {
 
                         {/* Submit button */}
                         <div className="flex justify-end mt-8">
-                            <button type="submit" className="flex p-4 gap-2 justify-center items-center py-3 bg-[#096B68] text-white rounded-[40px] text-normal font-semibold hover:brightness-150 duration-100">
+                            <button type="submit" className="flex p-4 gap-2 justify-center items-center py-3 bg-[#129990] text-white rounded-[40px] text-normal font-semibold hover:bg-[#096B68] duration-100">
                                 <span>{loading ? "Mengirim" : "Kirim Laporan "}</span>
                                 <img src={send} alt="send" className="w-6" />
                             </button>
