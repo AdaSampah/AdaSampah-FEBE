@@ -8,7 +8,7 @@ import contoh from "../../assets/Laporan/contoh.png";
 
 const Card = ({ dataSampah, index }) => {
   return (
-    <div key={index} className="cardKu border-[1px] border-inputBorder lg:max-w-[360px] max-w-[320px] rounded-3xl ">
+    <div key={index} className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)]  lg:max-w-[360px] max-w-[320px] rounded-3xl ">
       <div className="p-4">
         <div className="flex items-center gap-2">
           <img src={profImg} alt="profpic" className="w-10 h-10 rounded-full object-cover" />
