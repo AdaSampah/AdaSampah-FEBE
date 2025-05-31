@@ -9,9 +9,11 @@ import ProfileIcon from "../../assets/Navbar/profile-icon.png";
 
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
+import { axiosInstance } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   console.log("USER CONTEXT:", user);
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -19,19 +21,31 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileProfileDrawerOpen, setMobileProfileDrawerOpen] = useState(false);
   const profileDropdownRef = useRef(null);
+  const mobileProfileDropdownRef = useRef(null);
   const location = useLocation();
   const handleToggleMenu = () => setMenuOpen((prev) => !prev);
   const handleProfileClick = () => setProfileDrawerOpen(true);
-  const handleMobileProfileClick = () => setMobileProfileDrawerOpen(true);
-  const handleCloseMobileProfileDrawer = () =>
-    setMobileProfileDrawerOpen(false);
-
-  const alwaysWhiteBgPaths = ["/login", "/register", "/daftar", "/laporan/:id"];
+  const handleMobileProfileClick = () =>
+    setMobileProfileDrawerOpen((prev) => !prev);
+  const alwaysWhiteBgPaths = ["/login", "/register"];
 
   // Cek apakah path sekarang termasuk yang pake background putih
   const isAlwaysWhite =
     alwaysWhiteBgPaths.some((p) => location.pathname.startsWith(p)) ||
-    /^\/laporan\/\d+/.test(location.pathname);
+    /^\/laporan\/[^/]+$/.test(location.pathname);
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.post("/user/logout", {}, { withCredentials: true });
+      setUser(null);
+      setProfileDrawerOpen(false);
+      navigate("/login");
+    } catch (err) {
+      alert("Gagal logout. Silakan coba lagi.");
+    }
+  };
 
   const navbarClasses = `w-full left-0 top-0 z-50 fixed transition-all duration-300
   ${
@@ -82,6 +96,20 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [profileDrawerOpen]);
+
+  useEffect(() => {
+    if (!mobileProfileDrawerOpen) return;
+    function handleClickOutside(e) {
+      if (
+        mobileProfileDropdownRef.current &&
+        !mobileProfileDropdownRef.current.contains(e.target)
+      ) {
+        setMobileProfileDrawerOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [mobileProfileDrawerOpen]);
 
   return (
     <header
@@ -155,17 +183,32 @@ export default function Navbar() {
             </li>
             <li>
               <Link
-                to="#"
+                to="/peta-sebaran"
                 className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
                   ${
-                    location.pathname === "/tentang"
+                    location.pathname === "/peta-sebaran"
                       ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
                       : isAlwaysWhite || scrolled
                       ? "text-black"
                       : "text-white"
                   }`}
               >
-                Tentang Kami
+                Peta Sebaran
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/education"
+                className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+                  ${
+                    location.pathname === "/education"
+                      ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
+                      : isAlwaysWhite || scrolled
+                      ? "text-black"
+                      : "text-white"
+                  }`}
+              >
+                Sampah Pedia
               </Link>
             </li>
           </ul>
@@ -177,7 +220,7 @@ export default function Navbar() {
               <img
                 src={user?.profileUrl || ProfileIcon}
                 alt="Profile"
-                className="user-profile w-10 h-10 rounded-full cursor-pointer object-cover border-2 border-[#24BBB1] shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-white"
+                className="user-profile w-13 h-13 rounded-full cursor-pointer object-cover border-2 border-[#24BBB1] shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-white"
                 onClick={handleProfileClick}
               />
               {/* Dropdown Profile Drawer */}
@@ -232,7 +275,10 @@ export default function Navbar() {
                         </p>
                       </div>
                     </Link>
-                    <div className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
+                    <div
+                      className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2"
+                      onClick={handleLogout}
+                    >
                       <img src={logout} alt="logout" className="md:w-7 w-5" />
                       <p className="font-semibold md:text-normal text-smallText">
                         Keluar
@@ -333,16 +379,30 @@ export default function Navbar() {
               </li>
               <li>
                 <Link
-                  to="#"
+                  to="/peta-sebaran"
                   className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
-                      location.pathname === "/tentang"
+                      location.pathname === "/peta-sebaran"
                         ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  Tentang Kami
+                  Peta Sebaran
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/education"
+                  className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                    ${
+                      location.pathname === "/education"
+                        ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
+                        : ""
+                    }`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Sampah Pedia
                 </Link>
               </li>
             </ul>
@@ -358,6 +418,7 @@ export default function Navbar() {
                   {/* Dropdown Profile Drawer Mobile */}
                   {
                     <div
+                      ref={mobileProfileDropdownRef}
                       className={`absolute right-0 bottom-full mb-4 z-50 w-54 bg-white shadow-lg rounded-lg p-4 min-h-[120px] flex flex-col transition-all duration-300 ease-in-out transform
                         ${
                           mobileProfileDrawerOpen
@@ -406,7 +467,10 @@ export default function Navbar() {
                             </p>
                           </div>
                         </Link>
-                        <div className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2">
+                        <div
+                          className="text-[#B3261E] flex items-center gap-3 mt-2 hover:bg-gray-100 duration-150 cursor-pointer px-4 py-2"
+                          onClick={handleLogout}
+                        >
                           <img src={logout} alt="news" className="md:w-7 w-5" />
                           <p className="font-semibold md:text-normal text-smallText">
                             Keluar

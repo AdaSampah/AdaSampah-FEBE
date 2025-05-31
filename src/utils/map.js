@@ -1,5 +1,3 @@
-// map.js
-
 import { map, tileLayer, Icon, icon, marker, popup, latLng } from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -51,7 +49,7 @@ export const createMap = (selector, options = {}) => {
 
   if (existingMapContainer) {
     console.log("createMap: Map already initialized, returning existing map.");
-    return mapContainer._leaflet_id;
+    return mapContainer._leaflet_map; // Return the actual map instance
   }
 
   const tileOsm = tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -64,6 +62,8 @@ export const createMap = (selector, options = {}) => {
     layers: [tileOsm],
     ...options,
   });
+
+  mapContainer._leaflet_map = mapInstance;  // Attach the map instance to the container
 
   return mapInstance;
 };
@@ -93,14 +93,35 @@ export const addMarker = (mapInstance, coordinates, markerOptions = {}, popupOpt
     ...markerOptions,
   });
 
+  // Menambahkan tooltip (label) dengan kategori di marker
+  newMarker.bindTooltip(markerOptions.alt, { permanent: false, direction: 'top' }).openTooltip();
+
+  // Menambahkan pop-up jika popupOptions diberikan
   if (popupOptions) {
     const newPopup = popup(popupOptions);
     newPopup.setLatLng(coordinates);
-    newPopup.setContent((layer) => layer.options.alt);
+    newPopup.setContent(`
+      <b>${popupOptions}</b><br>
+      Kategori: ${markerOptions.alt}  <!-- Menampilkan kategori -->
+    `);
     newMarker.bindPopup(newPopup);
   }
 
-  newMarker.addTo(mapInstance);
+  newMarker.addTo(mapInstance);  // Pastikan marker ini ditambahkan ke peta yang valid
 
   return newMarker;
 };
+
+// Export default object for map utility functions
+const Map = {
+  addMapEventListener,
+  getPlaceNameByCoordinate,
+  isGeolocationAvailable,
+  getCurrentPosition,
+  createMap,
+  changeCamera,
+  createIcon,
+  addMarker,
+};
+
+export default Map;

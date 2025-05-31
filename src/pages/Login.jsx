@@ -178,7 +178,7 @@ const Masuk = () => {
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <ImSpinner2 className="animate-spin h-5 w-5 text-white" />
-                    Masuk...
+                    Menuggu...
                   </span>
                 ) : (
                   "Login"

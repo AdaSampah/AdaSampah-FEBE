@@ -51,23 +51,52 @@ export default function FormEducation() {
     }
   };
 
-  // Fungsi prediksi (ganti dengan REST API ML di masa depan)
+  // Fungsi prediksi (ganti dengan REST API ML nanti)
   const predictWaste = async (imageFile) => {
     setLoading(true);
-    // TODO: Ganti bagian ini dengan fetch ke REST API ML
-    // Contoh:
+    // Nanti ganti pake axios atau fetch untuk kirim gambar ke API ML
+    // Contoh dengan axios:
+    // import axios from "axios";
     // const formData = new FormData();
     // formData.append('file', imageFile);
-    // const response = await fetch('URL_API_ML', { method: 'POST', body: formData });
-    // const data = await response.json();
-    // return { jenis: data.jenis, info: data.info };
+    // const response = await axios.post('URL_API_ML', formData, {
+    //   headers: { 'Content-Type': 'multipart/form-data' }
+    // });
+    // const data = response.data;
+    // return { jenis: data.jenis, kategori: data.kategori, info: data.info, link: data.link };
 
     // Simulasi delay dan hasil prediksi dummy
     await new Promise((r) => setTimeout(r, 1200));
-    return {
-      jenis: "Plastik",
-      info: "Plastik dapat didaur ulang menjadi pot bunga, kerajinan tangan, atau bahan bangunan ramah lingkungan.",
-    };
+    // Dummy: randomize antara organik/anorganik dengan kategori
+    const dummyData = [
+      {
+        jenis: "Organik",
+        kategori: "Sisa Makanan",
+        info: "Sampah organik dapat diolah menjadi kompos atau pupuk cair untuk tanaman.",
+        link: "https://www.youtube.com/watch?v=QwQ2FQK5KjA",
+      },
+      {
+        jenis: "Anorganik",
+        kategori: "Plastik",
+        info: "Sampah anorganik seperti plastik dapat didaur ulang menjadi kerajinan tangan atau barang berguna lainnya.",
+        link: "https://www.youtube.com/watch?v=8vK2wM5Qn1g",
+      },
+      {
+        jenis: "Anorganik",
+        kategori: "Kaleng",
+        info: "Kaleng bekas dapat dimanfaatkan sebagai pot tanaman atau bahan kerajinan.",
+        link: "https://www.youtube.com/watch?v=2pQJwQwQwQw",
+      },
+      {
+        jenis: "Anorganik",
+        kategori: "Kaca",
+        info: "Sampah kaca dapat didaur ulang menjadi barang baru atau digunakan kembali sebagai wadah.",
+        link: "https://www.youtube.com/watch?v=3kQJwQwQwQw",
+      },
+    ];
+    // Pilih salah satu secara acak
+    const res = dummyData[Math.floor(Math.random() * dummyData.length)];
+    return res;
   };
 
   const handleFileInputChange = (e) => {
@@ -128,62 +157,39 @@ export default function FormEducation() {
                 <p className="text-body text-normal font-semibold my-3 text-[#096B68]">
                   Foto Sampah
                 </p>
-                <div className="relative group">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt="BuktiFoto"
-                    className="w-full max-h-[240px] object-cover rounded-xl border border-[#e0f7f6] shadow"
-                  />
-                  <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      type="button"
-                      onClick={handleRemoveImage}
-                      className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
-                      title="Hapus Gambar"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleEditImage}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
-                      title="Edit Gambar"
-                    >
-                      <FiEdit2 size={18} />
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="editGambarEducation"
-                      className="hidden"
-                      onChange={handleFileInputChange}
+                <div className="flex justify-center w-full mb-4">
+                  <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="BuktiFoto"
+                      className="max-h-[240px] mx-auto object-contain rounded-xl border border-[#e0f7f6] bg-white"
                     />
+                    <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
+                        title="Hapus Gambar"
+                      >
+                        <FiTrash2 size={18} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleEditImage}
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
+                        title="Edit Gambar"
+                      >
+                        <FiEdit2 size={18} />
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        id="editGambarEducation"
+                        className="hidden"
+                        onChange={handleFileInputChange}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex gap-3 mt-4">
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="flex-1 flex justify-center items-center bg-red-500 text-white rounded-xl font-medium text-sm py-2 hover:bg-red-600 transition"
-                  >
-                    Hapus Gambar
-                  </button>
-                  <label htmlFor="editGambarEducation" className="flex-1">
-                    <button
-                      type="button"
-                      onClick={handleEditImage}
-                      className="w-full flex justify-center items-center bg-yellow-500 text-white rounded-xl font-medium text-sm py-2 hover:bg-yellow-600 transition"
-                    >
-                      Edit Gambar
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="editGambarEducation"
-                      className="hidden"
-                      onChange={handleFileInputChange}
-                    />
-                  </label>
                 </div>
               </>
             ) : (
@@ -231,7 +237,7 @@ export default function FormEducation() {
                         Drag & drop foto atau klik untuk upload
                       </p>
                       <p className="text-smallText text-center text-[#6B7280]">
-                        JPEG, JPG, PNG (5MB max)
+                        JPEG, JPG, PNG
                       </p>
                       <input
                         ref={fileInputRef}
@@ -307,11 +313,29 @@ export default function FormEducation() {
                   <h4 className="text-xl font-bold text-[#096B68]">
                     Jenis Sampah:{" "}
                     <span className="font-extrabold">{result.jenis}</span>
+                    {result.kategori && (
+                      <>
+                        {" "}
+                        <span className="font-normal text-gray-600">
+                          ({result.kategori})
+                        </span>
+                      </>
+                    )}
                   </h4>
                 </div>
                 <p className="text-gray-700 text-base text-center">
                   {result.info}
                 </p>
+                {result.link && (
+                  <a
+                    href={result.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 text-[#129990] underline font-semibold hover:text-[#096B68] transition"
+                  >
+                    Lihat cara pemanfaatan
+                  </a>
+                )}
               </div>
             )}
           </form>
