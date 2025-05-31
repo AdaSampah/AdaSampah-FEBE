@@ -196,21 +196,21 @@ export default function FormLaporkan() {
                                                 muted
                                                 style={{ background: "#000", objectFit: 'cover' }} // Gunakan objectFit untuk memastikan video tidak terdistorsi
                                             />
-<div className="absolute bottom-2 left-0 right-0 px-4 flex flex-col sm:flex-row justify-between items-center">
-    <select
-        ref={selectCameraRef}
-        className="px-3 py-2 ml-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white w-1/2 sm:w-1/4"
-        style={{ maxWidth: 300 }}
-    />
+                                                <div className="absolute bottom-2 left-0 right-0 px-4 flex flex-col sm:flex-row justify-between items-center">
+                                                    <select
+                                                        ref={selectCameraRef}
+                                                        className="px-3 py-2 ml-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white w-1/2 sm:w-1/4"
+                                                        style={{ maxWidth: 300 }}
+                                                    />
 
-    <button
-        type="button"
-        onClick={handleTakePicture}
-        className="px-4 py-3 mb-2 ml-2 sm:ml-5 bg-[#129990] hover:bg-[#096B68] text-white rounded-full font-bold shadow transition w-auto sm:w-full flex items-center justify-center gap-2 cursor-pointer mt-4 sm:mt-2"
-    >
-        <FaCamera className="w-6 h-6 sm:w-6 sm:h-6" /> {/* Ukuran ikon kamera yang lebih besar */}
-    </button>
-</div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleTakePicture}
+                                                        className="px-4 py-3 mb-2 ml-2 sm:ml-5 bg-[#129990] hover:bg-[#096B68] text-white rounded-full font-bold shadow transition w-auto sm:w-full flex items-center justify-center gap-2 cursor-pointer mt-4 sm:mt-2"
+                                                    >
+                                                        <FaCamera className="w-6 h-6 sm:w-6 sm:h-6" /> {/* Ukuran ikon kamera yang lebih besar */}
+                                                    </button>
+                                                </div>
                                             <canvas ref={canvasRef} className="hidden" width={640} height={480} />
                                         </div>
                                     </div>
