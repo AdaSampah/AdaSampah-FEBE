@@ -9,10 +9,10 @@ export default function HeroHome() {
           style={{ backgroundImage: `url(${HeroBackground})` }}
         >
           <div className="w-full flex flex-col justify-center items-center sm:p-10 p-4">
-            <h2 className="text-white 2xl:text-headline2 md:text-[52px] text-3xl font-extrabold text-center md:leading-normal leading-normal w-[789px]">
+            <h2 className="text-white 2xl:text-headline2 md:text-[52px] text-3xl font-extrabold text-center md:leading-normal leading-normal max-w-[789px] md:max-w-[650px] sm:max-w-[90vw] w-full break-words">
               Bersama Wujudkan Lingkungan Bersih dan Sehat
             </h2>
-            <p className="text-white text-[18px] text-normal my-8 text-center max-w-[90vw]">
+            <p className="text-white text-[18px] text-normal my-8 text-center max-w-[600px] sm:max-w-[90vw] w-full break-words">
               Laporkan lokasi penumpukan sampah di sekitar Anda dengan mudah.
               Jadikan lingkungan lebih bersih, sehat, dan nyaman bersama
               AdaSampah.

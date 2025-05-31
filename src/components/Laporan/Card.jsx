@@ -1,5 +1,5 @@
 import React from "react";
-import profImg from "../../assets/Navbar/kosong.jpeg";
+import profImg from "../../assets/Navbar/profile-icon.png";
 import titikTiga from "../../assets/Laporan/titikTiga.svg";
 import { MdArrowCircleUp } from "react-icons/md";
 import { IoMdShare } from "react-icons/io";

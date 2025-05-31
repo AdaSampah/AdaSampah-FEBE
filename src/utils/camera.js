@@ -7,6 +7,7 @@ let videoElement;
 let selectCameraElement;
 let canvasElement;
 let takePictureButton;
+let cameraCancelled = false;
 
 export function addNewStream(stream) {
   if (!Array.isArray(window.currentStreams)) {
@@ -38,8 +39,8 @@ function initialListener() {
 
     height = (videoElement.videoHeight * width) / videoElement.videoWidth;
 
-    canvasElement.setAttribute('width', width);
-    canvasElement.setAttribute('height', height);
+    canvasElement.setAttribute("width", width);
+    canvasElement.setAttribute("height", height);
 
     streaming = true;
   };
@@ -53,30 +54,35 @@ function initialListener() {
 async function populateDeviceList(stream) {
   try {
     if (!(stream instanceof MediaStream)) {
-      return Promise.reject(Error('MediaStream not found!'));
+      return Promise.reject(Error("MediaStream not found!"));
     }
 
     const { deviceId } = stream.getVideoTracks()[0].getSettings();
 
     const enumeratedDevices = await navigator.mediaDevices.enumerateDevices();
     const list = enumeratedDevices.filter((device) => {
-      return device.kind === 'videoinput';
+      return device.kind === "videoinput";
     });
 
     const html = list.reduce((accumulator, device, currentIndex) => {
+      // Tambahkan fallback label 'Front' jika deviceId mengandung 'front'
+      let label = device.label || `Camera ${currentIndex + 1}`;
+      if (!device.label && device.deviceId && /front/i.test(device.deviceId)) {
+        label = "Front Camera";
+      }
       return accumulator.concat(`
         <option
           value="${device.deviceId}"
-          ${deviceId === device.deviceId ? 'selected' : ''}
+          ${deviceId === device.deviceId ? "selected" : ""}
         >
-          ${device.label || `Camera ${currentIndex + 1}`}
+          ${label}
         </option>
       `);
-    }, '');
+    }, "");
 
     selectCameraElement.innerHTML = html;
   } catch (error) {
-    console.error('populateDeviceList: error:', error);
+    console.error("populateDeviceList: error:", error);
   }
 }
 
@@ -99,13 +105,22 @@ async function getStream() {
 
     return stream;
   } catch (error) {
-    console.error('getStream: error:', error);
+    console.error("getStream: error:", error);
     return null;
   }
 }
 
 export async function launch() {
-  currentStream = await getStream();
+  cameraCancelled = false;
+  const stream = await getStream();
+  if (cameraCancelled) {
+    // Jika sudah dibatalkan, stop stream dan jangan set ke video
+    if (stream instanceof MediaStream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    return;
+  }
+  currentStream = stream;
 
   // Record all MediaStream in global context
   addNewStream(currentStream);
@@ -117,6 +132,7 @@ export async function launch() {
 }
 
 export function stop() {
+  cameraCancelled = true;
   if (videoElement) {
     videoElement.srcObject = null;
     streaming = false;
@@ -132,22 +148,29 @@ export function stop() {
 }
 
 function clearCanvas() {
-  const context = canvasElement.getContext('2d');
-  context.fillStyle = '#AAAAAA';
+  if (!canvasElement) return; // Tambahkan pengecekan ini
+  const context = canvasElement.getContext("2d");
+  context.fillStyle = "#AAAAAA";
   context.fillRect(0, 0, canvasElement.width, canvasElement.height);
 }
 
-export async function takePicture() {
+export async function takePicture(mirror = false) {
   if (!(width && height)) {
     return null;
   }
 
-  const context = canvasElement.getContext('2d');
+  const context = canvasElement.getContext("2d");
 
   canvasElement.width = width;
   canvasElement.height = height;
 
+  context.save();
+  if (mirror) {
+    context.translate(width, 0);
+    context.scale(-1, 1);
+  }
   context.drawImage(videoElement, 0, 0, width, height);
+  context.restore();
 
   return await new Promise((resolve) => {
     canvasElement.toBlob((blob) => resolve(blob));
@@ -163,6 +186,6 @@ export function initializeCamera({ video, cameraSelect, canvas }) {
   videoElement = video;
   selectCameraElement = cameraSelect;
   canvasElement = canvas;
-
+  cameraCancelled = false;
   initialListener();
 }

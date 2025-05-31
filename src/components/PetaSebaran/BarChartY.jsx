@@ -20,7 +20,7 @@ const BarChartY = ({ data }) => {
         labels: data.map((item) => item[0]),
         datasets: [
           {
-            label: "Jumlah laporan Aktivitas Ilegal",
+            label: "Jumlah aktivitas Laporan Sampah ",
             data: data.map((item) => item[1]), // Extract values from data
             backgroundColor: data.map((item, index, arr) => {
               // Find index of current value within the data array
