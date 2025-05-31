@@ -2,15 +2,18 @@ import React, { useRef, useState, useEffect } from "react";
 import addPhoto from "../../assets/Laporkan/addPhoto.svg";
 import { FiTrash2, FiEdit2, FiCheckCircle } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
+import { FaCamera } from "react-icons/fa";
 
 import * as cameraUtils from "../../utils/camera";
 
 export default function FormEducation() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null); // { jenis: "...", info: "..." }
+  const [result, setResult] = useState(null);
   const fileInputRef = useRef(null);
   const [imgSource, setImageSource] = useState("galeri");
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
+  const [forceMirror, setForceMirror] = useState(false);
   const videoRef = useRef(null);
   const selectCameraRef = useRef(null);
   const canvasRef = useRef(null);
@@ -42,9 +45,32 @@ export default function FormEducation() {
     };
   }, [imgSource]);
 
+  // Deteksi kamera depan
+  useEffect(() => {
+    if (imgSource !== "camera") {
+      setIsFrontCamera(false);
+      setForceMirror(false);
+      return;
+    }
+    const select = selectCameraRef.current;
+    if (!select) return;
+    const handleChange = () => {
+      const selectedOption = select.options[select.selectedIndex];
+      setIsFrontCamera(
+        selectedOption &&
+          /front|depan|selfie/i.test(selectedOption.textContent || "")
+      );
+    };
+    select.addEventListener("change", handleChange);
+    handleChange();
+    return () => {
+      select.removeEventListener("change", handleChange);
+    };
+  }, [imgSource]);
+
   // Fungsi ambil gambar dari kamera
   const handleTakePicture = async () => {
-    const blob = await cameraUtils.takePicture();
+    const blob = await cameraUtils.takePicture(isFrontCamera || forceMirror);
     if (blob) {
       setFile(new File([blob], "camera-photo.jpg", { type: blob.type }));
       setImageSource("galeri"); // Kembali ke mode galeri setelah ambil gambar
@@ -143,7 +169,7 @@ export default function FormEducation() {
         <div className="h-2/3 w-32 bg-gradient-to-bl from-[#e0f7f6] to-transparent rounded-bl-[80px] blur-[2px]" />
       </div>
       <div className="flex justify-center w-full px-2 py-10 bg-transparent relative z-10">
-        <div className="w-full max-w-3xl bg-white rounded-3xl shadow-2xl border border-[#e0f7f6] p-0 overflow-hidden">
+        <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-[#e0f7f6] p-0 overflow-hidden">
           <form className="sm:p-12 p-5" onSubmit={handlePredict}>
             <h3 className="text-[28px] md:text-[32px] font-extrabold text-center text-[#096B68] mb-2 tracking-tight">
               Edukasi Sampah
@@ -251,34 +277,69 @@ export default function FormEducation() {
                 ) : (
                   // UI kamera
                   <div className="flex flex-col items-center gap-3 py-4">
-                    <div className="w-full flex flex-col items-center">
-                      <video
-                        ref={videoRef}
-                        className="rounded-xl border border-[#e0f7f6] shadow w-full max-w-xs"
-                        autoPlay
-                        playsInline
-                        muted
-                        style={{ background: "#000" }}
-                      />
-                      <select
-                        ref={selectCameraRef}
-                        className="mt-2 px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white"
-                        style={{ maxWidth: 300 }}
-                      />
-                      <canvas
-                        ref={canvasRef}
-                        className="hidden"
-                        width={640}
-                        height={480}
-                      />
+                    <div className="w-full flex flex-col items-center relative">
+                      <div className="relative w-full max-w-lg aspect-video">
+                        {/* Mirror toggle switch */}
+                        <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+                          <label
+                            htmlFor="forceMirror"
+                            className="flex items-center cursor-pointer select-none"
+                            title="Mirror Video"
+                          >
+                            <span className="hidden md:inline text-xs font-semibold mr-2 bg-white/70 text-black rounded px-2 py-0.5 shadow">
+                              {" "}
+                              Mirror
+                            </span>
+                            <span className="relative">
+                              <input
+                                type="checkbox"
+                                id="forceMirror"
+                                checked={forceMirror}
+                                onChange={(e) =>
+                                  setForceMirror(e.target.checked)
+                                }
+                                className="sr-only peer"
+                              />
+                              <div className="w-10 h-5 bg-gray-200 rounded-full shadow-inner peer-checked:bg-[#129990] transition-colors duration-200"></div>
+                              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white border border-gray-300 rounded-full shadow peer-checked:translate-x-5 transition-transform duration-200"></div>
+                            </span>
+                          </label>
+                        </div>
+                        <video
+                          ref={videoRef}
+                          className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
+                          autoPlay
+                          playsInline
+                          muted
+                          style={
+                            isFrontCamera || forceMirror
+                              ? { transform: "scaleX(-1)" }
+                              : undefined
+                          }
+                        />
+                        {/* Action Button */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
+                          <select
+                            ref={selectCameraRef}
+                            className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
+                          />
+                          <button
+                            type="button"
+                            onClick={handleTakePicture}
+                            className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
+                            title="Ambil Foto"
+                          >
+                            <FaCamera className="text-xl md:text-2xl" />
+                          </button>
+                        </div>
+                        <canvas
+                          ref={canvasRef}
+                          className="hidden"
+                          width={640}
+                          height={480}
+                        />
+                      </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleTakePicture}
-                      className="mt-3 px-6 py-2 bg-[#129990] hover:bg-[#096B68] text-white rounded-full font-bold shadow transition"
-                    >
-                      Ambil Foto
-                    </button>
                   </div>
                 )}
               </>
@@ -333,7 +394,7 @@ export default function FormEducation() {
                     rel="noopener noreferrer"
                     className="mt-4 text-[#129990] underline font-semibold hover:text-[#096B68] transition"
                   >
-                    Lihat cara pemanfaatan
+                    Yuk lihat cara pemanfaatannya!
                   </a>
                 )}
               </div>

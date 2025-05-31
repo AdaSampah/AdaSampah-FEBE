@@ -208,7 +208,7 @@ export default function Navbar() {
                       : "text-white"
                   }`}
               >
-                Sampah Pedia
+                Kenali Sampahmu
               </Link>
             </li>
           </ul>
@@ -402,7 +402,7 @@ export default function Navbar() {
                     }`}
                   onClick={() => setMenuOpen(false)}
                 >
-                  Sampah Pedia
+                  Kenali Sampahmu
                 </Link>
               </li>
             </ul>

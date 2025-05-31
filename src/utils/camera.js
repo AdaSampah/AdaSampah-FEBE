@@ -65,12 +65,17 @@ async function populateDeviceList(stream) {
     });
 
     const html = list.reduce((accumulator, device, currentIndex) => {
+      // Tambahkan fallback label 'Front' jika deviceId mengandung 'front'
+      let label = device.label || `Camera ${currentIndex + 1}`;
+      if (!device.label && device.deviceId && /front/i.test(device.deviceId)) {
+        label = "Front Camera";
+      }
       return accumulator.concat(`
         <option
           value="${device.deviceId}"
           ${deviceId === device.deviceId ? "selected" : ""}
         >
-          ${device.label || `Camera ${currentIndex + 1}`}
+          ${label}
         </option>
       `);
     }, "");
@@ -149,7 +154,7 @@ function clearCanvas() {
   context.fillRect(0, 0, canvasElement.width, canvasElement.height);
 }
 
-export async function takePicture() {
+export async function takePicture(mirror = false) {
   if (!(width && height)) {
     return null;
   }
@@ -159,7 +164,13 @@ export async function takePicture() {
   canvasElement.width = width;
   canvasElement.height = height;
 
+  context.save();
+  if (mirror) {
+    context.translate(width, 0);
+    context.scale(-1, 1);
+  }
   context.drawImage(videoElement, 0, 0, width, height);
+  context.restore();
 
   return await new Promise((resolve) => {
     canvasElement.toBlob((blob) => resolve(blob));
