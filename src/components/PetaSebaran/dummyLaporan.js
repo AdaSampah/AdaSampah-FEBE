@@ -240,7 +240,7 @@ const dummyLaporan = [
     provinsi: "Daerah Istimewa Yogyakarta",
     kabupaten: "Kota Yogyakarta",
     lon: 110.3750,
-    lat: -7.7966,   // Diubah untuk menghindari duplikasi
+    lat: -7.7966,   
     kategori: "Limbah",
     deskripsi: "Limbah rumah tangga mengalir ke saluran irigasi sawah.",
     foto: "../../assets/Laporan/contoh.png",
