@@ -2,12 +2,12 @@ import React from "react";
 import Card from "./Card";
 import dummyLaporan from "./dummyLaporan";
 
-export const LaporanPencarian = ({ searchParams }) => {
+export const LaporanPencarian = ({ searchParams, dataSampah }) => {
   const { keyword, provinsi } = searchParams;
 
-  const hasilPencarian = dummyLaporan.filter((item) => {
-    const cocokProvinsi = provinsi ? item.provinsi.toLowerCase().includes(provinsi) : true;
-    const cocokKeyword = keyword ? item.nama.toLowerCase().includes(keyword) || item.kategori.toLowerCase().includes(keyword) || item.deskripsi.toLowerCase().includes(keyword) : true;
+  const hasilPencarian = dataSampah.filter((item) => {
+    const cocokProvinsi = provinsi ? item.province.toLowerCase().includes(provinsi) : true;
+    const cocokKeyword = keyword ? item.description.toLowerCase().includes(keyword) : true;
 
     return cocokProvinsi && cocokKeyword;
   });
