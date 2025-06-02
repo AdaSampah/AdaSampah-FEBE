@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../config";
 import { UserContext } from "../../context/UserContext";
 
-const Card = ({ dataSampah, index }) => {
+const Card = ({ dataSampah, index, onUpdateSavedReport }) => {
   const { user } = useContext(UserContext);
   const date = new Date(dataSampah.createdAt);
   const formattedDate = date.toLocaleDateString("id-ID", {
@@ -36,8 +36,14 @@ const Card = ({ dataSampah, index }) => {
           withCredentials: true,
         }
       );
+
       if (res.data.status === "success") {
         setIsBookmarked((prev) => !prev);
+
+        // Beri tahu komponen induk bahwa ada perubahan
+        if (onUpdateSavedReport) {
+          onUpdateSavedReport(dataSampah._id, !isBookmarked);
+        }
       }
     } catch (error) {
       console.error("Gagal toggle bookmark:", error);

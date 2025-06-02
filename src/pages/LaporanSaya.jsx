@@ -1,10 +1,11 @@
 // routes/LaporanSaya.jsx
 import React from "react";
 import CoverEditProfile from "../components/LaporanSaya/CoverEditProfile";
-import ProfileImage from "../components/LaporanSaya/ProfileImage";
+
 import { Outlet, Link, useLocation } from "react-router-dom";
 import newsIcon from "../assets/LaporanSaya/news.svg";
 import bookmarkIcon from "../assets/LaporanSaya/bookmark.svg";
+import ProfileImage from "../components/EditProfile/CoverEditProfile/ProfileImage";
 
 const LaporanSaya = () => {
   const location = useLocation();
