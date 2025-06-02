@@ -1,47 +1,43 @@
 import React, { useState, useEffect } from "react";
 import Map from "../../utils/map"; // Memastikan ini diimpor dengan benar
-import dummyLaporan from "./dummyLaporan"; // Import dummy data
+import { axiosInstance } from "../../config"; // Import axiosInstance
 
 const PetaPage = () => {
   const [map, setMap] = useState(null);
+  const [laporanData, setLaporanData] = useState([]); // State untuk data laporan dari API
 
   // Inisialisasi peta
   const initialMap = async () => {
     const mapInstance = await Map.createMap("#map", {
-      zoom: 10,
+      zoom: 11,
       center: [-7.7944973, 110.4070047],
       locate: true,
     });
 
     setMap(mapInstance);
-    addMarkers(mapInstance);
+    console.log("Peta sudah diinisialisasi"); // Debugging peta terinisialisasi
+    addMarkers(mapInstance); // Menambahkan marker setelah peta siap
   };
 
-  // Fungsi untuk menambahkan markers berdasarkan data dummy
+  // Memanggil data laporan dari backend
+  const fetchLaporanData = async () => {
+    try {
+      const response = await axiosInstance.get("/reports"); // Gantilah dengan endpoint yang sesuai
+      setLaporanData(response.data.data);
+    } catch (error) {
+      console.error("Error fetching laporan data:", error);
+    }
+  };
+
   const addMarkers = (mapInstance) => {
-    dummyLaporan.forEach((laporan) => {
-      // Mengonversi lat dan lon ke angka menggunakan parseFloat
+    laporanData.forEach((laporan) => {
       const lat = parseFloat(laporan.lat);
       const lon = parseFloat(laporan.lon);
 
-      // Debug: Menampilkan koordinat untuk pengecekan
-      console.log(`Memeriksa marker dengan lat: ${lat}, lon: ${lon}`);
-
-      // Pastikan lat dan lon valid
       if (!isNaN(lat) && !isNaN(lon)) {
-        Map.addMarker(
-          mapInstance,
-          [lat, lon],
-          {
-            alt: laporan.kabupaten, // Kategori digunakan sebagai label di marker dan di pop-up
-          },
-          `
-            <b>${laporan.nama}</b><br>
-            ${laporan.kategori}<br>
-            ${laporan.deskripsi}<br>
-            <img src="${laporan.foto}" alt="Foto Laporan" width="100" />
-          `
-        );
+        Map.addMarker(mapInstance, [lat, lon], {
+          alt: laporan.location,
+        });
       } else {
         console.log(
           `Koordinat tidak valid untuk laporan dengan ID: ${laporan.id}`
@@ -50,39 +46,16 @@ const PetaPage = () => {
     });
   };
 
-  // Fungsi untuk menangani penambahan marker baru ketika data baru ditambahkan
-  const addNewMarker = (newData) => {
-    if (map) {
-      const lat = parseFloat(newData.lat);
-      const lon = parseFloat(newData.lon);
-
-      // Pastikan lat dan lon valid
-      if (!isNaN(lat) && !isNaN(lon)) {
-        Map.addMarker(
-          map,
-          [lat, lon],
-          {
-            alt: newData.kategori, // Menambahkan kategori pada marker baru
-          },
-          `
-            <b>${newData.nama}</b><br>
-            ${newData.kategori}<br>
-            ${newData.deskripsi}<br>
-            <img src="${newData.foto}" alt="Foto Laporan" width="100" />
-          `
-        );
-      } else {
-        console.log(
-          `Koordinat tidak valid untuk laporan baru dengan ID: ${newData.id}`
-        );
-      }
-    }
-  };
-
-  // Inisialisasi peta saat komponen dimuat
   useEffect(() => {
     initialMap();
+    fetchLaporanData(); // Memanggil API saat komponen pertama kali dimuat
   }, []);
+
+  useEffect(() => {
+    if (map && laporanData.length > 0) {
+      addMarkers(map); // Menambahkan marker setelah data tersedia
+    }
+  }, [map, laporanData]);
 
   return (
     <div className="flex justify-center items-center min-h-0 md:min-h-[80vh] lg:min-h-screen bg-gray-100 py-2 md:py-6 lg:py-10">

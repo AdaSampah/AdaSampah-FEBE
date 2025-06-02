@@ -158,6 +158,15 @@ export default function FormEducation() {
     setLoading(false);
   };
 
+  // Fungsi untuk handle transisi mode dengan View Transition API
+  const handleChangeImgSource = (mode) => {
+    if (window?.document?.startViewTransition) {
+      document.startViewTransition(() => setImageSource(mode));
+    } else {
+      setImageSource(mode);
+    }
+  };
+
   return (
     <section className="relative w-full">
       {/* Dekorasi kiri */}
@@ -231,7 +240,7 @@ export default function FormEducation() {
                         ? "border-[#096B68] bg-[#e0f7f6]"
                         : "border-gray-300 bg-white"
                     } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
-                    onClick={() => setImageSource("galeri")}
+                    onClick={() => handleChangeImgSource("galeri")}
                   >
                     Upload Gambar
                   </button>
@@ -242,106 +251,116 @@ export default function FormEducation() {
                         ? "border-[#096B68] bg-[#e0f7f6]"
                         : "border-gray-300 bg-white"
                     } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
-                    onClick={() => setImageSource("camera")}
+                    onClick={() => handleChangeImgSource("camera")}
                   >
                     Ambil Gambar
                   </button>
                 </div>
-                {imgSource === "galeri" ? (
-                  <label htmlFor="imageEducation">
-                    <div
-                      className="border-dashed mt-8 border-2 border-[#b6e6e3] rounded-xl cursor-pointer max-h-[220px] bg-[#f8fefd] hover:shadow-lg hover:border-[#096B68] transition-all flex flex-col justify-center items-center py-10"
-                      onDrop={handleFileDrop}
-                      onDragOver={handleDragOver}
-                    >
-                      <img
-                        src={addPhoto}
-                        alt="iconAddImg"
-                        className="md:w-10 w-8 mb-2"
-                      />
-                      <p className="text-normal text-center text-[#096B68] font-medium">
-                        Drag & drop foto atau klik untuk upload
-                      </p>
-                      <p className="text-smallText text-center text-[#6B7280]">
-                        JPEG, JPG, PNG
-                      </p>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        id="imageEducation"
-                        className="hidden"
-                        onChange={handleFileInputChange}
-                      />
-                    </div>
-                  </label>
-                ) : (
-                  // UI kamera
-                  <div className="flex flex-col items-center gap-3 py-4">
-                    <div className="w-full flex flex-col items-center relative">
-                      <div className="relative w-full max-w-lg aspect-video">
-                        {/* Mirror toggle switch */}
-                        <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
-                          <label
-                            htmlFor="forceMirror"
-                            className="flex items-center cursor-pointer select-none"
-                            title="Mirror Video"
-                          >
-                            <span className="hidden md:inline text-xs font-semibold mr-2 bg-white/70 text-black rounded px-2 py-0.5 shadow">
-                              {" "}
-                              Mirror
-                            </span>
-                            <span className="relative">
-                              <input
-                                type="checkbox"
-                                id="forceMirror"
-                                checked={forceMirror}
-                                onChange={(e) =>
-                                  setForceMirror(e.target.checked)
-                                }
-                                className="sr-only peer"
-                              />
-                              <div className="w-10 h-5 bg-gray-200 rounded-full shadow-inner peer-checked:bg-[#129990] transition-colors duration-200"></div>
-                              <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white border border-gray-300 rounded-full shadow peer-checked:translate-x-5 transition-transform duration-200"></div>
-                            </span>
-                          </label>
-                        </div>
-                        <video
-                          ref={videoRef}
-                          className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
-                          autoPlay
-                          playsInline
-                          muted
-                          style={
-                            isFrontCamera || forceMirror
-                              ? { transform: "scaleX(-1)" }
-                              : undefined
-                          }
+                {/* Animasi transisi area galeri/kamera */}
+                <div
+                  key={imgSource}
+                  className="transition-slide-up"
+                  style={{
+                    animation:
+                      "slideUpFadeIn 400ms cubic-bezier(.4,2,.6,1) both",
+                  }}
+                >
+                  {imgSource === "galeri" ? (
+                    <label htmlFor="imageEducation">
+                      <div
+                        className="border-dashed mt-8 border-2 border-[#b6e6e3] rounded-xl cursor-pointer max-h-[220px] bg-[#f8fefd] hover:shadow-lg hover:border-[#096B68] transition-all flex flex-col justify-center items-center py-10"
+                        onDrop={handleFileDrop}
+                        onDragOver={handleDragOver}
+                      >
+                        <img
+                          src={addPhoto}
+                          alt="iconAddImg"
+                          className="md:w-10 w-8 mb-2"
                         />
-                        {/* Action Button */}
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
-                          <select
-                            ref={selectCameraRef}
-                            className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
-                          />
-                          <button
-                            type="button"
-                            onClick={handleTakePicture}
-                            className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
-                            title="Ambil Foto"
-                          >
-                            <FaCamera className="text-xl md:text-2xl" />
-                          </button>
-                        </div>
-                        <canvas
-                          ref={canvasRef}
+                        <p className="text-normal text-center text-[#096B68] font-medium">
+                          Drag & drop foto atau klik untuk upload
+                        </p>
+                        <p className="text-smallText text-center text-[#6B7280]">
+                          JPEG, JPG, PNG
+                        </p>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          id="imageEducation"
                           className="hidden"
-                          width={640}
-                          height={480}
+                          onChange={handleFileInputChange}
                         />
                       </div>
+                    </label>
+                  ) : (
+                    // UI kamera
+                    <div className="flex flex-col items-center gap-3 py-4">
+                      <div className="w-full flex flex-col items-center relative">
+                        <div className="relative w-full max-w-lg aspect-video">
+                          {/* Mirror toggle switch */}
+                          <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+                            <label
+                              htmlFor="forceMirror"
+                              className="flex items-center cursor-pointer select-none"
+                              title="Mirror Video"
+                            >
+                              <span className="hidden md:inline text-xs font-semibold mr-2 bg-white/70 text-black rounded px-2 py-0.5 shadow">
+                                {" "}
+                                Mirror
+                              </span>
+                              <span className="relative">
+                                <input
+                                  type="checkbox"
+                                  id="forceMirror"
+                                  checked={forceMirror}
+                                  onChange={(e) =>
+                                    setForceMirror(e.target.checked)
+                                  }
+                                  className="sr-only peer"
+                                />
+                                <div className="w-10 h-5 bg-gray-200 rounded-full shadow-inner peer-checked:bg-[#129990] transition-colors duration-200"></div>
+                                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white border border-gray-300 rounded-full shadow peer-checked:translate-x-5 transition-transform duration-200"></div>
+                              </span>
+                            </label>
+                          </div>
+                          <video
+                            ref={videoRef}
+                            className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
+                            autoPlay
+                            playsInline
+                            muted
+                            style={
+                              isFrontCamera || forceMirror
+                                ? { transform: "scaleX(-1)" }
+                                : undefined
+                            }
+                          />
+                          {/* Action Button */}
+                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
+                            <select
+                              ref={selectCameraRef}
+                              className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTakePicture}
+                              className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
+                              title="Ambil Foto"
+                            >
+                              <FaCamera className="text-xl md:text-2xl" />
+                            </button>
+                          </div>
+                          <canvas
+                            ref={canvasRef}
+                            className="hidden"
+                            width={640}
+                            height={480}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </>
             )}
             {/* Tombol prediksi */}

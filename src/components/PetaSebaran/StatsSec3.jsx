@@ -1,21 +1,43 @@
 import React, { useEffect, useState } from "react";
 import BarChartY from "./BarChartY";
-import dummyLaporan from "./dummyLaporan"; // Import data dummy Anda
+import { axiosInstance } from "../../config"; // Import axiosInstance
 
 const StatsSec3 = () => {
   const [topKabupatens, setTopKabupatens] = useState([]);
-  const [semuaData, setSemuaData] = useState(dummyLaporan); // Menggunakan data dummy
+  const [semuaData, setSemuaData] = useState([]); // Menyimpan data yang didapat dari API
 
   useEffect(() => {
-    findTopKabupatens(semuaData);
+    // Memanggil data dari backend saat komponen pertama kali di-render
+    fetchLaporanData();
+  }, []);
+
+  // Fungsi untuk mengambil data dari backend
+  const fetchLaporanData = async () => {
+    try {
+      const response = await axiosInstance.get("/reports"); // Gantilah dengan endpoint yang sesuai
+      setSemuaData(response.data.data);
+      console.log(semuaData)
+    } catch (error) {
+      console.error("Error fetching laporan data:", error);
+    }
+  };
+
+  useEffect(() => {
+    // Hanya memanggil findTopKabupatens jika data sudah diterima
+    if (semuaData.length > 0) {
+      findTopKabupatens(semuaData);
+            console.log(semuaData)
+
+    }
   }, [semuaData]);
 
+  // Fungsi untuk menghitung kabupaten dengan laporan terbanyak
   function findTopKabupatens(data) {
     const kabupatenCounts = {};
 
-    // Menghitung jumlah laporan berdasarkan kabupaten
+    // Memeriksa apakah data memiliki struktur yang benar
     data.forEach((entry) => {
-      const kabupaten = entry.kabupaten; // Ambil data kabupaten
+      const kabupaten = entry.regency; // Memastikan mengambil 'regency' langsung dari objek
       if (kabupaten) {
         kabupatenCounts[kabupaten] = (kabupatenCounts[kabupaten] || 0) + 1;
       }
@@ -37,9 +59,6 @@ const StatsSec3 = () => {
     jumlah,
   ]);
 
-  // Debugging: Cetak data yang akan dikirim ke BarChartY
-  console.log("Top Kabupatens:", topKabupatens);
-
   return (
     <section>
       <div className="md:px-32 sm:px-6 px-3 lg:py-40 md:py-15 sm:py-10 py-8">
@@ -53,8 +72,8 @@ const StatsSec3 = () => {
 
           {/* Menampilkan statistik berdasarkan topKabupatens */}
           <p className="2xl:text-[18px] text-normal font-medium w-full max-w-[400px] text-center lg:text-left mt-4 lg:mt-0">
-            Statistik menyatakan bahwa kabupaten dengan laporan aktivitas
-            laporan sampah adalah{" "}
+            Statistik menyatakan bahwa kabupaten dengan laporan aktivitas 
+            laporan sampah terbanyak adalah{" "}
             {topKabupatens.map((kabupaten, index) => (
               <span key={index}>
                 <b>{kabupaten[0]}</b> dengan jumlah laporan {kabupaten[1]}
