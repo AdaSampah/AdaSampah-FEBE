@@ -51,9 +51,12 @@ export default function LaporanUser() {
     fetchLaporan();
   }, [userId, filterStatus, urutkan]);
 
-  // Hitung jumlah laporan per status
-  const countByStatus = (status) => laporan.filter((item) => item.status === status).length;
-
+  const countByStatusName = (targetStatusName) =>
+    laporan.filter((item) => {
+      const statusArray = item.status || [];
+      const latestStatus = statusArray[statusArray.length - 1]; // ambil elemen terakhir
+      return latestStatus?.statusName === targetStatusName;
+    }).length;
   if (loading) {
     return (
       <div className="cardContainer flex flex-wrap justify-center gap-8 mt-6 mb-20">
@@ -104,15 +107,15 @@ export default function LaporanUser() {
         <div className="flex lg:gap-10 gap-6 lg:mt-0 mt-4">
           <div className="text-center">
             <p className="md:text-body text-base font-semibold">Diverifikasi</p>
-            <p className="font-bold text-[#0084FF] lg:text-4xl sm:text-3xl text-2xl">{countByStatus("Diverifikasi")}</p>
+            <p className="font-bold text-[#0084FF] lg:text-4xl sm:text-3xl text-2xl">{countByStatusName("Diverifikasi")}</p>
           </div>
           <div className="text-center">
             <p className="md:text-body text-base font-semibold">Diproses</p>
-            <p className="font-bold text-[#C9AE17] lg:text-4xl sm:text-3xl text-2xl">{countByStatus("Diproses")}</p>
+            <p className="font-bold text-[#C9AE17] lg:text-4xl sm:text-3xl text-2xl">{countByStatusName("Diproses")}</p>
           </div>
           <div className="text-center">
             <p className="md:text-body text-base font-semibold">Selesai</p>
-            <p className="font-bold text-[#53A88C] lg:text-4xl sm:text-3xl text-2xl">{countByStatus("Selesai")}</p>
+            <p className="font-bold text-[#53A88C] lg:text-4xl sm:text-3xl text-2xl">{countByStatusName("Selesai")}</p>
           </div>
         </div>
       </div>

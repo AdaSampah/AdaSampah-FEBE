@@ -1,4 +1,3 @@
-// MapSection.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { createMap, addMarker, getPlaceNameByCoordinate } from "../../utils/map";
 
@@ -6,10 +5,10 @@ const MapSection = ({ latitude, longitude }) => {
   const mapInstanceRef = useRef(null);
   const [placeName, setPlaceName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const mapId = `map-${Math.random().toString(36).substr(2, 9)}`; // Generate unique ID
 
   useEffect(() => {
-    // Pastikan latitude dan longitude valid
     if (!latitude || !longitude) {
       setIsLoading(false);
       return;
@@ -17,17 +16,27 @@ const MapSection = ({ latitude, longitude }) => {
 
     const initializeMap = async () => {
       try {
-        // Inisialisasi peta menggunakan createMap dengan selector ID
-        if (!mapInstanceRef.current) {
-          const mapSelector = `#${mapId}`;
+        // Pastikan DOM elemen sudah ada
+        const mapSelector = `#${mapId}`;
+        const mapContainer = document.querySelector(mapSelector);
 
+        if (!mapContainer) {
+          console.error("Map container not found");
+          throw new Error("Map container not found");
+        }
+
+        // Tunggu sedikit lebih lama untuk memastikan DOM benar-benar ready
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // Inisialisasi peta
+        if (!mapInstanceRef.current) {
           mapInstanceRef.current = createMap(mapSelector, {
             center: [parseFloat(latitude), parseFloat(longitude)],
             zoom: 15,
             scrollWheelZoom: true,
           });
 
-          // Tambahkan marker untuk posisi sampah
+          // Tambahkan marker
           addMarker(
             mapInstanceRef.current,
             [parseFloat(latitude), parseFloat(longitude)],
@@ -41,23 +50,23 @@ const MapSection = ({ latitude, longitude }) => {
           );
         }
 
-        // Dapatkan nama tempat berdasarkan koordinat
+        // Dapatkan nama tempat
         const name = await getPlaceNameByCoordinate(latitude, longitude);
-        setPlaceName(name);
+        setPlaceName(name.full || name.short || `${latitude}, ${longitude}`);
       } catch (error) {
         console.error("Error initializing map:", error);
         setPlaceName(`${latitude}, ${longitude}`);
       } finally {
         setIsLoading(false);
+        setMapLoaded(true);
       }
     };
 
-    // Delay untuk memastikan DOM sudah ter-render
+    // Delay awal agar DOM render lebih dulu
     const timer = setTimeout(() => {
       initializeMap();
-    }, 100);
+    }, 200);
 
-    // Cleanup function
     return () => {
       clearTimeout(timer);
       if (mapInstanceRef.current) {
@@ -88,7 +97,7 @@ const MapSection = ({ latitude, longitude }) => {
           <p className="text-sm text-gray-600">
             <span className="font-medium">Koordinat:</span> {latitude}, {longitude}
           </p>
-          {isLoading ? (
+          {!mapLoaded ? (
             <p className="text-sm text-gray-500">Memuat nama tempat...</p>
           ) : (
             <p className="text-sm text-gray-600">
@@ -103,12 +112,19 @@ const MapSection = ({ latitude, longitude }) => {
         <div id={mapId} className="w-full h-72 md:h-96 z-10" style={{ minHeight: "256px" }} />
 
         {/* Loading Overlay */}
-        {isLoading && (
+        {(isLoading || !mapLoaded) && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
               <span className="text-gray-600">Memuat peta...</span>
             </div>
+          </div>
+        )}
+
+        {/* Fallback jika peta tidak muncul */}
+        {!isLoading && !mapLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-red-50 bg-opacity-70">
+            <p className="text-red-600 text-center px-4">Gagal memuat peta. Pastikan Leaflet dan Maptiler SDK telah dimuat dengan benar.</p>
           </div>
         )}
       </div>
