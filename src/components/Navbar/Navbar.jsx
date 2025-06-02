@@ -111,8 +111,38 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileProfileDrawerOpen]);
 
+  // Animasi Navbar muncul dari atas setiap kali route berubah
+  const navbarRef = useRef(null);
+  useEffect(() => {
+    const navbar = navbarRef.current;
+    if (!navbar) return;
+
+    // View Transition API
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        navbar.animate(
+          [
+            { transform: "translateY(-100%)", opacity: 0 },
+            { transform: "translateY(0)", opacity: 1 },
+          ],
+          { duration: 400, easing: "cubic-bezier(.4,0,.2,1)" }
+        );
+      });
+    } else {
+      // Fallback Animation API
+      navbar.animate(
+        [
+          { transform: "translateY(-100%)", opacity: 0 },
+          { transform: "translateY(0)", opacity: 1 },
+        ],
+        { duration: 400, easing: "cubic-bezier(.4,0,.2,1)" }
+      );
+    }
+  }, [location.pathname]);
+
   return (
     <header
+      ref={navbarRef}
       className={navbarClasses}
       style={{
         backdropFilter: !scrolled && !isAlwaysWhite ? "blur(2px)" : "none",

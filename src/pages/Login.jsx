@@ -6,10 +6,11 @@ import { MdLogin } from "react-icons/md";
 import { ImSpinner2 } from "react-icons/im";
 import { UserContext } from "../context/UserContext";
 import { axiosInstance } from "../config";
+import { validateUsername, validateEmail } from "../utils/validation";
 
 const Masuk = () => {
   const [error, setError] = useState(false);
-  const [username, setUsername] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isClosed, setIsClosed] = useState(true);
   const { user, setUser } = useContext(UserContext);
@@ -23,12 +24,40 @@ const Masuk = () => {
   }
 
   // Real-time validation
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleUsernameOrEmailChange = (e) => {
+    const value = e.target.value;
+    setUsernameOrEmail(value);
+    let errorMsg = "";
+    if (value.trim() === "") {
+      errorMsg = "Username atau email tidak boleh kosong.";
+    } else if (value.includes("@")) {
+      // Cek sebagai email
+      if (!validateEmail(value)) {
+        errorMsg = "Format email tidak valid.";
+      }
+    } else {
+      // Cek sebagai username
+      if (/\s/.test(value)) {
+        errorMsg = "Username tidak boleh mengandung spasi.";
+      } else if (!validateUsername(value)) {
+        if (!/^[A-Za-z0-9_]+$/.test(value)) {
+          errorMsg = "Username hanya boleh huruf, angka, dan underscore (_).";
+        } else if (value.length < 3 || value.length > 20) {
+          errorMsg = "Username harus 3-20 karakter.";
+        } else if (/^_/.test(value) || /_$/.test(value)) {
+          errorMsg =
+            "Username tidak boleh diawali atau diakhiri underscore (_).";
+        } else if (/__/.test(value)) {
+          errorMsg =
+            "Username tidak boleh mengandung dua underscore (__) berturut-turut.";
+        } else {
+          errorMsg = "Username tidak valid.";
+        }
+      }
+    }
     setErrors((prev) => ({
       ...prev,
-      username:
-        e.target.value.trim() === "" ? "Username tidak boleh kosong." : "",
+      usernameOrEmail: errorMsg,
     }));
   };
 
@@ -45,8 +74,32 @@ const Masuk = () => {
     setSubmitError("");
     // Final validation before submit
     const newErrors = {};
-    if (username.trim() === "")
-      newErrors.username = "Username tidak boleh kosong.";
+    if (usernameOrEmail.trim() === "")
+      newErrors.usernameOrEmail = "Username atau email tidak boleh kosong.";
+    else if (usernameOrEmail.includes("@")) {
+      if (!validateEmail(usernameOrEmail)) {
+        newErrors.usernameOrEmail = "Format email tidak valid.";
+      }
+    } else {
+      if (/\s/.test(usernameOrEmail)) {
+        newErrors.usernameOrEmail = "Username tidak boleh mengandung spasi.";
+      } else if (!validateUsername(usernameOrEmail)) {
+        if (!/^[A-Za-z0-9_]+$/.test(usernameOrEmail)) {
+          newErrors.usernameOrEmail =
+            "Username hanya boleh huruf, angka, dan underscore (_).";
+        } else if (usernameOrEmail.length < 3 || usernameOrEmail.length > 20) {
+          newErrors.usernameOrEmail = "Username harus 3-20 karakter.";
+        } else if (/^_/.test(usernameOrEmail) || /_$/.test(usernameOrEmail)) {
+          newErrors.usernameOrEmail =
+            "Username tidak boleh diawali atau diakhiri underscore (_).";
+        } else if (/__/.test(usernameOrEmail)) {
+          newErrors.usernameOrEmail =
+            "Username tidak boleh mengandung dua underscore (__) berturut-turut.";
+        } else {
+          newErrors.usernameOrEmail = "Username tidak valid.";
+        }
+      }
+    }
     if (password.length < 8)
       newErrors.password = "Password minimal 8 karakter.";
     setErrors(newErrors);
@@ -54,22 +107,20 @@ const Masuk = () => {
 
     setLoading(true);
     try {
-      const res = await axiosInstance.post(
-        "/user/login",
-        { username, password },
-        { withCredentials: true }
-      );
-      console.log("RESPON DATA.DATA:", res.data.data);
+      let payload = { password };
+      if (usernameOrEmail.includes("@")) {
+        payload.email = usernameOrEmail;
+      } else {
+        payload.username = usernameOrEmail;
+      }
+      const res = await axiosInstance.post("/user/login", payload, {
+        withCredentials: true,
+      });
       setUser(res.data.data);
-      console.log("setUser selesai");
-
       setLoading(false);
       navigate("/");
-      console.log("navigate selesai");
     } catch (error) {
       setLoading(false);
-      console.error("LOGIN ERROR:", error);
-
       if (
         error.response &&
         error.response.data &&
@@ -77,7 +128,9 @@ const Masuk = () => {
       ) {
         setSubmitError(error.response.data.message);
       } else {
-        setSubmitError("Login gagal. Silakan cek username dan password Anda.");
+        setSubmitError(
+          "Login gagal. Silakan cek username/email dan password Anda."
+        );
       }
     }
   };
@@ -103,29 +156,26 @@ const Masuk = () => {
             >
               <div className="input1 mb-6 flex flex-col">
                 <label
-                  htmlFor="username"
+                  htmlFor="usernameOrEmail"
                   className="text-neutral-800 text-xl font-bold leading-normal"
                 >
-                  Username:
+                  Username atau Email:
                 </label>
                 <input
                   required
                   type="text"
-                  id="username"
-                  placeholder="Contoh: JohnDoe"
+                  id="usernameOrEmail"
+                  placeholder="Username atau Email"
                   className={`border mt-2 rounded-md border-[#222] w-full py-3 px-4 text-tprimary outline-none ${
-                    errors.username ? "border-red-500" : ""
+                    errors.usernameOrEmail ? "border-red-500" : ""
                   }`}
-                  onChange={handleUsernameChange}
-                  value={username}
+                  onChange={handleUsernameOrEmailChange}
+                  value={usernameOrEmail}
                   autoComplete="username"
                 />
-                <div className="text-xs text-gray-500 mt-1">
-                  Masukkan username yang telah terdaftar.
-                </div>
-                {errors.username && (
+                {errors.usernameOrEmail && (
                   <div className="text-red-500 text-xs mt-1">
-                    {errors.username}
+                    {errors.usernameOrEmail}
                   </div>
                 )}
               </div>

@@ -2,11 +2,11 @@ import React, { useState, useContext } from "react";
 import { Link, Navigate } from "react-router-dom";
 import mataBuka from "../assets/Login/mataBuka.svg";
 import mataTutup from "../assets/Login/mataTutup.svg";
-// import { Navbar2 } from "../components/Navbar/Navbar2";
 import { axiosInstance } from "../config";
 import { ImSpinner2 } from "react-icons/im";
 
 import { UserContext } from "../context/UserContext";
+import { validateUsername, validateEmail } from "../utils/validation";
 
 const Daftar = () => {
   const { user } = useContext(UserContext);
@@ -31,17 +31,44 @@ const Daftar = () => {
   }
 
   // Validation helpers
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePassword = (pw) =>
     pw.length >= 8 && /[A-Za-z]/.test(pw) && /\d/.test(pw);
 
+  // Helper untuk validasi username dengan aturan tambahan
+  // const validateUsername = (uname) => {
+  //   if (!/^[A-Za-z0-9_]+$/.test(uname)) return false;
+  //   if (uname.length < 3 || uname.length > 20) return false;
+  //   if (/^_/.test(uname) || /_$/.test(uname)) return false;
+  //   if (/__/.test(uname)) return false;
+  //   return true;
+  // };
+
   // Real-time validation
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    const value = e.target.value;
+    setUsername(value);
+    let errorMsg = "";
+    if (value.trim() === "") {
+      errorMsg = "Username tidak boleh kosong.";
+    } else if (/\s/.test(value)) {
+      errorMsg = "Username tidak boleh mengandung spasi.";
+    } else if (!validateUsername(value)) {
+      if (!/^[A-Za-z0-9_]+$/.test(value)) {
+        errorMsg = "Username hanya boleh huruf, angka, dan underscore (_).";
+      } else if (value.length < 3 || value.length > 20) {
+        errorMsg = "Username harus 3-20 karakter.";
+      } else if (/^_/.test(value) || /_$/.test(value)) {
+        errorMsg = "Username tidak boleh diawali atau diakhiri underscore (_).";
+      } else if (/__/.test(value)) {
+        errorMsg =
+          "Username tidak boleh mengandung dua underscore (__) berturut-turut.";
+      } else {
+        errorMsg = "Username tidak valid.";
+      }
+    }
     setErrors((prev) => ({
       ...prev,
-      username:
-        e.target.value.trim() === "" ? "Username tidak boleh kosong." : "",
+      username: errorMsg,
     }));
   };
 
@@ -81,6 +108,24 @@ const Daftar = () => {
       newErrors.fullName = "Nama lengkap tidak boleh kosong.";
     if (username.trim() === "")
       newErrors.username = "Username tidak boleh kosong.";
+    else if (/\s/.test(username)) {
+      newErrors.username = "Username tidak boleh mengandung spasi.";
+    } else if (!validateUsername(username)) {
+      if (!/^[A-Za-z0-9_]+$/.test(username)) {
+        newErrors.username =
+          "Username hanya boleh huruf, angka, dan underscore (_).";
+      } else if (username.length < 3 || username.length > 20) {
+        newErrors.username = "Username harus 3-20 karakter.";
+      } else if (/^_/.test(username) || /_$/.test(username)) {
+        newErrors.username =
+          "Username tidak boleh diawali atau diakhiri underscore (_).";
+      } else if (/__/.test(username)) {
+        newErrors.username =
+          "Username tidak boleh mengandung dua underscore (__) berturut-turut.";
+      } else {
+        newErrors.username = "Username tidak valid.";
+      }
+    }
     if (!validateEmail(email)) newErrors.email = "Format email tidak valid.";
     if (!validatePassword(password))
       newErrors.password =
@@ -128,7 +173,7 @@ const Daftar = () => {
           <div className="sm:w-[550px] w-[300px] mx-auto">
             <h1 className=" text-[32px] font-bold">
               Selamat Datang di{" "}
-              <span className="text-greenSecondary">Ecotection</span> 👋
+              <span className="text-greenSecondary">AdaSampah</span> 👋
             </h1>
             <p className="login-text mt-3 text-[#666] font-medium text-[16px] ">
               Mari mulai buat akun anda
@@ -183,9 +228,6 @@ const Daftar = () => {
                   value={username}
                   autoComplete="username"
                 />
-                <div className="text-xs text-gray-500 mt-1">
-                  Masukkan nama pengguna unik Anda.
-                </div>
                 {errors.username && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.username}

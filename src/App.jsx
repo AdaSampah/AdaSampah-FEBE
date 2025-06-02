@@ -18,6 +18,8 @@ import Education from "./pages/Education";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+import { Toaster } from "react-hot-toast";
+
 function App() {
   const [isLogin, setIsLogin] = useState(false);
 
@@ -29,6 +31,24 @@ function App() {
       <BrowserRouter>
         <ScrollToTop />
         <Navbar />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3500,
+            style: {
+              fontSize: "1rem",
+              borderRadius: "8px",
+              background: "#fff",
+              color: "#222",
+            },
+            success: {
+              style: { background: "#e6f9ed", color: "#166534" },
+            },
+            error: {
+              style: { background: "#fbeaea", color: "#b91c1c" },
+            },
+          }}
+        />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

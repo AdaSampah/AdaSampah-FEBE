@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Navigate } from "react-router-dom";
 import { FaCamera } from "react-icons/fa"; // Import React Icon untuk kamera
+import { FiTrash2, FiEdit2 } from "react-icons/fi";
 import { createMap, getCurrentPosition, addMarker } from "../../utils/map";
 import Map from "../../utils/map";
 import addPhoto from "../../assets/Laporkan/addPhoto.svg";
@@ -7,6 +9,8 @@ import send from "../../assets/Laporkan/send.svg";
 import lokasi from "../../assets/Laporkan/tanda.svg";
 import * as cameraUtils from "../../utils/camera";
 import { axiosInstance } from "../../config";
+import { toast } from "react-hot-toast";
+import { ImSpinner2 } from "react-icons/im";
 
 export default function FormLaporkan() {
   const [latitude, setLatitude] = useState("");
@@ -14,6 +18,7 @@ export default function FormLaporkan() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [redirect, setRedirect] = useState(false); // Tambahkan state redirect
   const mapRef = useRef(null);
   const [markerInstance, setMarkerInstance] = useState(null);
   const fileInputRef = useRef(null);
@@ -21,17 +26,81 @@ export default function FormLaporkan() {
   const videoRef = useRef(null);
   const selectCameraRef = useRef(null);
   const canvasRef = useRef(null);
+  // Validation state
+  const [errors, setErrors] = useState({});
+  const descriptionRef = useRef(null);
+  const latitudeRef = useRef(null);
+  const longitudeRef = useRef(null);
+  // State touched buat validation real-time
+  const [touched, setTouched] = useState({
+    description: false,
+    latitude: false,
+    longitude: false,
+    file: false,
+  });
+
+  // Real-time validation hanya jika sudah pernah disentuh
+  useEffect(() => {
+    if (
+      touched.description ||
+      touched.latitude ||
+      touched.longitude ||
+      touched.file
+    ) {
+      validateAll();
+    }
+    // eslint-disable-next-line
+  }, [description, latitude, longitude, file]);
+
+  // Validation function
+  const validateAll = () => {
+    const newErrors = {};
+    if (!description.trim()) newErrors.description = "Deskripsi wajib diisi.";
+    if (!latitude || isNaN(latitude))
+      newErrors.latitude = "Latitude wajib diisi.";
+    if (!longitude || isNaN(longitude))
+      newErrors.longitude = "Longitude wajib diisi.";
+    if (!file) newErrors.file = "Bukti foto wajib diupload.";
+    setErrors(newErrors);
+    return newErrors;
+  };
+
+  // Focus to first error input
+  const focusFirstError = (errs) => {
+    if (errs.description && descriptionRef.current)
+      descriptionRef.current.focus();
+    else if (errs.latitude && latitudeRef.current) latitudeRef.current.focus();
+    else if (errs.longitude && longitudeRef.current)
+      longitudeRef.current.focus();
+  };
+
+  // View Transition API for switching mode
+  const handleChangeImgSource = (mode) => {
+    if (window?.document?.startViewTransition) {
+      document.startViewTransition(() => setImageSource(mode));
+    } else {
+      setImageSource(mode);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const validationErrors = validateAll();
+    if (Object.keys(validationErrors).length > 0) {
+      setLoading(false);
+      focusFirstError(validationErrors);
+      return;
+    }
 
     // Ambil alamat dari koordinat
     const placeNames = await Map.getPlaceNameByCoordinate(latitude, longitude);
 
     // Validasi hanya boleh posting di provinsi DIY
     if (placeNames.province !== "Daerah Istimewa Yogyakarta") {
-      alert("Saat ini, website kami hanya melayani pelaporan di daerah DIY");
+      toast.error(
+        "Saat ini, website kami hanya melayani pelaporan di daerah DIY"
+      );
       setLoading(false);
       return;
     }
@@ -54,12 +123,13 @@ export default function FormLaporkan() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.data.status === "success") {
-        alert("Laporan berhasil dikirim!");
+        toast.success("Laporan berhasil dikirim!");
+        setRedirect(true); // Set redirect ke true setelah sukses
       } else {
-        alert("Gagal mengirim laporan: " + response.data.message);
+        toast.error("Gagal mengirim laporan: " + response.data.message);
       }
     } catch (error) {
-      alert("Terjadi kesalahan saat mengirim laporan.");
+      toast.error("Terjadi kesalahan saat mengirim laporan.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -131,14 +201,23 @@ export default function FormLaporkan() {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
     setFile(droppedFile);
+    setTouched((prev) => ({ ...prev, file: true }));
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
   };
 
+  // Handler untuk onBlur
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    validateAll();
+  };
+
+  // Handler untuk file input
   const handleFileInputChange = (e) => {
     setFile(e.target.files[0]);
+    setTouched((prev) => ({ ...prev, file: true }));
   };
 
   // Fungsi untuk menghapus gambar
@@ -155,7 +234,7 @@ export default function FormLaporkan() {
     }
   };
 
-  // Efek untuk inisialisasi kamera jika imgSource = "camera"
+  // Efek untuk animasi inisialisasi kamera jika imgSource = "camera"
   useEffect(() => {
     let timeoutId;
     if (imgSource === "camera") {
@@ -183,62 +262,99 @@ export default function FormLaporkan() {
 
   return (
     <section>
+      {redirect && <Navigate to="/laporan" replace />} {/* Tambahkan ini */}
       <div className="sm:p-10 p-4">
         <div className="bg-white 2xl:max-w-[940px] lg:max-w-[800px] md:max-w-[680px] max-w-[640px] h-auto md:shadow-lg shadow-md md:rounded-3xl rounded-xl mx-auto 2xl:translate-y-[-620px] translate-y-[-320px]">
-          <form className="sm:p-20 p-8" onSubmit={handleSubmit}>
+          <form className="sm:p-20 p-8" onSubmit={handleSubmit} noValidate>
             <h3 className="md:text-[32px] sm:text-subheadline text-body md:leading-normal leading-normal text-center font-bold py-6 mb-10">
               Tuliskan laporan secara jelas dan detail
             </h3>
-
-            {file ? (
-              <>
-                <p className="md:text-body text-normal font-semibold my-3">
-                  Bukti Kejadian
-                </p>
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt="BuktiFoto"
-                  className="w-full max-h-[400px] object-cover"
-                />
-                <div className="flex gap-3 mt-3">
-                  <button
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="flex p-3 justify-center items-center bg-red-500 text-white rounded-[20px] font-small text-sm hover:bg-red-600"
-                  >
-                    Hapus Gambar
-                  </button>
-                  <label htmlFor="editGambar">
+            {/* Bukti Kejadian */}
+            <p className="md:text-body text-normal font-semibold my-3">
+              Bukti Kejadian
+            </p>
+            {/* Animasi transisi area galeri/kamera */}
+            <div
+              key={imgSource}
+              className="transition-slide-up"
+              style={{
+                animation: "slideUpFadeIn 400ms cubic-bezier(0.4,2,0.6,1) both",
+              }}
+            >
+              {file ? (
+                <>
+                  <div className="flex justify-center w-full mb-4">
+                    <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="BuktiFoto"
+                        className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
+                      />
+                      <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          type="button"
+                          onClick={handleRemoveImage}
+                          className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
+                          title="Hapus Gambar"
+                        >
+                          <FiTrash2 size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current.click()}
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
+                          title="Edit Gambar"
+                        >
+                          <FiEdit2 size={18} />
+                        </button>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          id="editGambar"
+                          className="hidden"
+                          onChange={handleFileInputChange}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col md:flex-row gap-3 mb-2">
                     <button
                       type="button"
-                      onClick={() => fileInputRef.current.click()}
-                      className="flex p-3 justify-center items-center bg-yellow-500 text-white rounded-[20px] font-small text-sm hover:bg-yellow-600"
+                      className={`flex-1 border ${
+                        imgSource === "galeri"
+                          ? "border-[#096B68] bg-[#e0f7f6]"
+                          : "border-gray-300 bg-white"
+                      } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
+                      onClick={() => handleChangeImgSource("galeri")}
                     >
-                      Edit Gambar
+                      Upload Gambar
                     </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="editGambar"
-                      className="hidden"
-                      onChange={handleFileInputChange}
-                    />
-                  </label>
-                </div>
-              </>
-            ) : (
-              <>
-                <p className="md:text-body text-normal font-semibold my-3">
-                  Bukti Kejadian
-                </p>
-                {imgSource === "galeri" ? (
-                  <label htmlFor="imageLaporkan">
-                    <div
-                      className="border-dashed border-2 border-inputBorder rounded-lg cursor-pointer max-h-[200px]"
-                      onDrop={handleFileDrop}
-                      onDragOver={handleDragOver}
+                    <button
+                      type="button"
+                      className={`flex-1 border ${
+                        imgSource === "camera"
+                          ? "border-[#096B68] bg-[#e0f7f6]"
+                          : "border-gray-300 bg-white"
+                      } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
+                      onClick={() => handleChangeImgSource("camera")}
                     >
-                      <div className="p-10 flex flex-col justify-center items-center">
+                      Ambil Gambar
+                    </button>
+                  </div>
+                  {imgSource === "galeri" ? (
+                    <label htmlFor="imageLaporkan">
+                      <div
+                        className={`border-dashed border-2 rounded-xl cursor-pointer max-h-[200px] bg-[#f8fefd] hover:shadow-lg hover:border-[#096B68] transition-all flex flex-col justify-center items-center py-10 ${
+                          errors.file ? "border-red-400" : "border-[#b6e6e3]"
+                        }`}
+                        onDrop={handleFileDrop}
+                        onDragOver={handleDragOver}
+                        onBlur={() => handleBlur("file")}
+                        tabIndex={0}
+                      >
                         <img
                           src={addPhoto}
                           alt="iconAddImg"
@@ -250,79 +366,58 @@ export default function FormLaporkan() {
                         <p className="md:text-normal text-smallText text-center text-[#6B7280]">
                           JPEG, JPG, PNG (5MB max)
                         </p>
-                      </div>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        id="imageLaporkan"
-                        className="hidden"
-                        onChange={handleFileInputChange}
-                      />
-                    </div>
-                  </label>
-                ) : (
-                  <div className="flex flex-col items-center gap-3 py-4 relative">
-                    <div className="w-full flex flex-col items-center gap-4 relative">
-                      <video
-                        ref={videoRef}
-                        className="rounded-xl border border-[#e0f7f6] shadow w-full max-w-[800px] h-[500px]" // Ukuran video lebih pas dan tidak terlalu besar ke bawah
-                        autoPlay
-                        playsInline
-                        muted
-                        style={{ background: "#000", objectFit: "cover" }} // Gunakan objectFit untuk memastikan video tidak terdistorsi
-                      />
-                      <div className="absolute bottom-2 left-0 right-0 px-4 flex flex-col sm:flex-row justify-between items-center">
-                        <select
-                          ref={selectCameraRef}
-                          className="px-3 py-2 ml-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white w-1/2 sm:w-1/4"
-                          style={{ maxWidth: 300 }}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          id="imageLaporkan"
+                          className="hidden"
+                          onChange={handleFileInputChange}
                         />
-
-                        <button
-                          type="button"
-                          onClick={handleTakePicture}
-                          className="px-4 py-3 mb-2 ml-2 sm:ml-5 bg-[#129990] hover:bg-[#096B68] text-white rounded-full font-bold shadow transition w-auto sm:w-full flex items-center justify-center gap-2 cursor-pointer mt-4 sm:mt-2"
-                        >
-                          <FaCamera className="w-6 h-6 sm:w-6 sm:h-6" />{" "}
-                          {/* Ukuran ikon kamera yang lebih besar */}
-                        </button>
                       </div>
-                      <canvas
-                        ref={canvasRef}
-                        className="hidden"
-                        width={640}
-                        height={480}
-                      />
+                    </label>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3 py-4 relative">
+                      <div className="w-full flex flex-col items-center relative">
+                        <div className="relative w-full max-w-lg aspect-video">
+                          <video
+                            ref={videoRef}
+                            className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
+                            autoPlay
+                            playsInline
+                            muted
+                          />
+                          {/* Action Button */}
+                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
+                            <select
+                              ref={selectCameraRef}
+                              className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
+                            />
+                            <button
+                              type="button"
+                              onClick={handleTakePicture}
+                              className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
+                              title="Ambil Foto"
+                            >
+                              <FaCamera className="text-xl md:text-2xl" />
+                            </button>
+                          </div>
+                          <canvas
+                            ref={canvasRef}
+                            className="hidden"
+                            width={640}
+                            height={480}
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <button
-                  type="button"
-                  className={` ${
-                    imgSource === "galeri"
-                      ? "border-[#096B68] bg-[#e0f7f6]"
-                      : "border-gray-300 bg-white"
-                  } text-[#096B68] mt-2 mr-3 border border-[#096B68] text-[#096B68]  px-5 py-2 rounded-[40px] transition-colors hover:bg-[#e0f7f6]`}
-                  onClick={() => setImageSource("galeri")}
-                >
-                  Upload Gambar
-                </button>
-
-                <button
-                  type="button"
-                  className={` ${
-                    imgSource === "camera"
-                      ? "border-[#096B68] bg-[#e0f7f6]"
-                      : "border-gray-300 bg-white"
-                  } mt-2 border border-[#096B68] text-[#096B68] px-5 py-2 rounded-[40px] transition-colors hover:bg-[#e0f7f6]`}
-                  onClick={() => setImageSource("camera")}
-                >
-                  Ambil Gambar
-                </button>
-              </>
-            )}
-
-            {/* Lokasi dan Deskripsi */}
+                  )}
+                  {touched.file && errors.file && (
+                    <p className="text-red-500 text-sm mt-2">{errors.file}</p>
+                  )}
+                </>
+              )}
+            </div>
+            {/* Deskripsi */}
             <div className="mt-4">
               <label htmlFor="deskripsiLaporan">
                 <p className="md:text-body text-normal font-semibold py-3">
@@ -330,17 +425,25 @@ export default function FormLaporkan() {
                 </p>
               </label>
               <textarea
+                ref={descriptionRef}
                 cols="30"
                 rows="10"
                 type="text"
                 id="deskripsiLaporan"
-                className="w-full h-32 p-4 block outline-none rounded-lg border-2 border-[#B0B0B0] font-medium"
+                className={`w-full h-32 p-4 block outline-none rounded-lg border-2 font-medium ${
+                  errors.description ? "border-red-400" : "border-[#B0B0B0]"
+                }`}
                 placeholder="Jelaskan secara detail kejadian yang ingin Anda laporkan"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                onBlur={() => handleBlur("description")}
               />
+              {touched.description && errors.description && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description}
+                </p>
+              )}
             </div>
-
             {/* Map section */}
             <div className="mt-4">
               <div
@@ -349,24 +452,43 @@ export default function FormLaporkan() {
               ></div>
               <div className="flex gap-3">
                 <input
+                  ref={latitudeRef}
                   type="number"
                   id="latitude"
-                  className="w-full p-1 block outline-none rounded-lg border-2 border-[#B0B0B0] font-medium"
+                  disabled
+                  className={`w-full p-1 block outline-none rounded-lg border-2 font-medium ${
+                    errors.latitude ? "border-red-400" : "border-[#B0B0B0]"
+                  }`}
                   placeholder="Latitude"
                   value={latitude}
                   onChange={(e) => setLatitude(e.target.value)}
-                  //   disabled
+                  onBlur={() => handleBlur("latitude")}
                 />
                 <input
+                  ref={longitudeRef}
                   type="number"
                   id="longitude"
-                  className="w-full p-1 block outline-none rounded-lg border-2 border-[#B0B0B0] font-medium"
+                  disabled
+                  className={`w-full p-1 block outline-none rounded-lg border-2 font-medium ${
+                    errors.longitude ? "border-red-400" : "border-[#B0B0B0]"
+                  }`}
                   placeholder="Longitude"
                   value={longitude}
                   onChange={(e) => setLongitude(e.target.value)}
-                  //   disabled
+                  onBlur={() => handleBlur("longitude")}
                 />
               </div>
+              {(touched.latitude && errors.latitude) ||
+              (touched.longitude && errors.longitude) ? (
+                <div className="flex gap-3 mt-1">
+                  {touched.latitude && errors.latitude && (
+                    <p className="text-red-500 text-sm">{errors.latitude}</p>
+                  )}
+                  {touched.longitude && errors.longitude && (
+                    <p className="text-red-500 text-sm">{errors.longitude}</p>
+                  )}
+                </div>
+              ) : null}
               <button
                 type="button"
                 onClick={handleUseCurrentLocation}
@@ -378,15 +500,27 @@ export default function FormLaporkan() {
                 </span>
               </button>
             </div>
-
             {/* Submit button */}
             <div className="flex justify-end mt-8">
               <button
                 type="submit"
-                className="flex p-4 gap-2 justify-center items-center py-3 bg-[#129990] text-white rounded-[40px] text-normal font-semibold hover:bg-[#096B68] duration-100"
+                disabled={Object.keys(errors).length > 0 || loading}
+                className={`flex p-4 gap-2 justify-center items-center py-3 bg-[#129990] text-white rounded-[40px] text-normal font-semibold hover:bg-[#096B68] duration-100 ${
+                  Object.keys(errors).length > 0 || loading
+                    ? "opacity-60 cursor-not-allowed"
+                    : ""
+                }`}
               >
-                <span>{loading ? "Mengirim" : "Kirim Laporan "}</span>
-                <img src={send} alt="send" className="w-6" />
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <ImSpinner2 className="animate-spin h-5 w-5 text-white" />
+                    Mengirim...
+                  </span>
+                ) : (
+                  <>
+                    Kirim Laporan <img src={send} alt="send" className="w-6" />
+                  </>
+                )}
               </button>
             </div>
           </form>

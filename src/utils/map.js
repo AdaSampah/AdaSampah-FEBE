@@ -1,8 +1,7 @@
-import { map, tileLayer, Icon, icon, marker, popup, latLng } from "leaflet";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { MAP_SERVICE_API_KEY } from "../config";
+import markerIcon from "../assets/PetaSebaran/marker-icon.png";
+import markerShadow from "../assets/PetaSebaran/marker-shadow.png";
+import markerIcon2x from "../assets/PetaSebaran/marker-icon-2x.png";
 
 // Fungsi untuk menambahkan event listener ke peta
 export const addMapEventListener = (mapInstance, eventName, callback) => {
@@ -21,14 +20,6 @@ const DIY_PROVINSI = "Daerah Istimewa Yogyakarta";
 
 // Fungsi untuk mendapatkan nama tempat berdasarkan koordinat
 export const getPlaceNameByCoordinate = async (latitude, longitude) => {
-  // Bounding box DIY (kurang lebih):
-  // Barat: 110.002, Timur: 110.850, Selatan: -8.200, Utara: -7.560
-  // const isInDIY =
-  //   longitude >= 110.002 &&
-  //   longitude <= 110.85 &&
-  //   latitude >= -8.2 &&
-  //   latitude <= -7.56;
-
   try {
     const url = new URL(
       `https://api.maptiler.com/geocoding/${longitude},${latitude}.json`
@@ -181,6 +172,7 @@ export const getCurrentPosition = (options = {}) => {
 
 // Fungsi untuk membuat dan menginisialisasi peta
 export const createMap = (selector, options = {}) => {
+  const L = window.L;
   const mapContainer = document.querySelector(selector);
   const existingMapContainer = mapContainer._leaflet_id;
 
@@ -189,34 +181,37 @@ export const createMap = (selector, options = {}) => {
     return mapContainer._leaflet_map; // Return the actual map instance
   }
 
-  const tileOsm = tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+  const vectorTileLayer = L.maptilerLayer({
+    apiKey: MAP_SERVICE_API_KEY,
+    style: `https://api.maptiler.com/maps/01972efe-81ac-73df-b15f-783a464486f8/style.json?key=${MAP_SERVICE_API_KEY}`,
   });
 
-  const mapInstance = map(mapContainer, {
+  const mapInstance = L.map(mapContainer, {
     zoom: options.zoom || 5,
     scrollWheelZoom: false,
-    layers: [tileOsm],
+    layers: [vectorTileLayer],
     ...options,
   });
 
-  mapContainer._leaflet_map = mapInstance; // Attach the map instance to the container
+  mapContainer._leaflet_map = mapInstance;
 
   return mapInstance;
 };
 
 export const changeCamera = (mapInstance, coordinates, zoomLevel = null) => {
+  const L = window.L;
   if (!zoomLevel) {
-    mapInstance.setView(latLng(coordinates), mapInstance.getZoom());
+    mapInstance.setView(L.latLng(coordinates), mapInstance.getZoom());
   } else {
-    mapInstance.setView(latLng(coordinates), zoomLevel);
+    mapInstance.setView(L.latLng(coordinates), zoomLevel);
   }
 };
 
 export const createIcon = (options = {}) => {
-  return icon({
-    ...Icon.Default.prototype.options,
+  const L = window.L;
+  // Gunakan path marker dari public folder agar tetap muncul
+  return L.icon({
+    ...L.Icon.Default.prototype.options,
     iconRetinaUrl: markerIcon2x,
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
@@ -230,7 +225,8 @@ export const addMarker = (
   markerOptions = {},
   popupOptions = null
 ) => {
-  const newMarker = marker(coordinates, {
+  const L = window.L;
+  const newMarker = L.marker(coordinates, {
     icon: createIcon(),
     alt: "Marker",
     ...markerOptions,
@@ -243,7 +239,7 @@ export const addMarker = (
 
   // Menambahkan pop-up jika popupOptions diberikan
   if (popupOptions) {
-    const newPopup = popup(popupOptions);
+    const newPopup = L.popup(popupOptions);
     newPopup.setLatLng(coordinates);
     newPopup.setContent(`
       <b>${popupOptions}</b><br>
