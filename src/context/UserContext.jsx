@@ -36,11 +36,5 @@ export function UserContextProvider({ children }) {
     }
   };
 
-  return (
-    <UserContext.Provider
-      value={{ user, setUser, dataUserLogin, setDataUserLogin }}
-    >
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, setUser, dataUserLogin, setDataUserLogin }}>{children}</UserContext.Provider>;
 }

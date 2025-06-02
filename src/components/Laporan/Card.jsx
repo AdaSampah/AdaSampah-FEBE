@@ -1,50 +1,108 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import profImg from "../../assets/Navbar/profile-icon.png";
-import titikTiga from "../../assets/Laporan/titikTiga.svg";
-import { MdArrowCircleUp } from "react-icons/md";
 import { IoMdShare } from "react-icons/io";
-import { FaRegBookmark } from "react-icons/fa";
-import { data, Link } from "react-router-dom";
-
-import contoh from "../../assets/Laporan/contoh.png";
+import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../../config";
+import { UserContext } from "../../context/UserContext";
 
 const Card = ({ dataSampah, index }) => {
+  const { user } = useContext(UserContext);
   const date = new Date(dataSampah.createdAt);
-
-  // Format menjadi "29 Mei 2025" (Indonesia)
   const formattedDate = date.toLocaleDateString("id-ID", {
     day: "2-digit",
     month: "long",
     year: "numeric",
   });
+
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (dataSampah.saved && dataSampah.saved.includes(user?.userId)) {
+      setIsBookmarked(true);
+    } else {
+      setIsBookmarked(false);
+    }
+  }, [dataSampah.saved, user?.userId]);
+
+  const handleBookmark = async (e) => {
+    e.stopPropagation();
+    try {
+      const res = await axiosInstance.patch(
+        `/reports/${dataSampah?._id}/saved/${user?.userId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data.status === "success") {
+        setIsBookmarked((prev) => !prev);
+      }
+    } catch (error) {
+      console.error("Gagal toggle bookmark:", error);
+    }
+  };
+
+  const handleShare = (e) => {
+    e.stopPropagation();
+    const baseUrl = window.location.href;
+    const urlToShare = baseUrl;
+    if (navigator.share) {
+      navigator
+        .share({
+          url: urlToShare,
+        })
+        .then(() => console.log("Berhasil berbagi"))
+        .catch((error) => console.error("Error berbagi:", error));
+    } else {
+      console.log("Fungsi share tidak didukung di browser ini.");
+    }
+  };
+
+  const handleCardClick = () => {
+    navigate(`/laporan/${dataSampah?._id}`);
+  };
+
   return (
-    <Link to={`/laporan/${dataSampah._id}`}>
-      <div key={index} className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)]  lg:max-w-[360px] max-w-[320px] rounded-3xl ">
-        <div className="p-4">
-          <div className="flex items-center gap-2">
-            <img src={dataSampah.profileUrl || profImg} alt="profpic" className="w-10 h-10 rounded-full object-cover" />
-            <div>
-              <p className="lg:text-smallText text-[12px]">
-                <b>{dataSampah.username}</b>
-                <span className="text-[#8A8A8A]"> · {formattedDate}</span>
-              </p>
-              <p className="lg:text-smallText text-[12px] text-[#5B5B5B] font-medium">
-                {dataSampah.regency}, {dataSampah.province}
-              </p>
-            </div>
-            {/* <img src={titikTiga} alt="titikTiga" /> */}
+    <div
+      key={index}
+      className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] 
+        lg:w-[360px] w-[320px] rounded-3xl flex flex-col overflow-hidden cursor-pointer"
+      onClick={handleCardClick}
+    >
+      <div className="p-4 flex-1 flex flex-col">
+        <div className="flex items-center gap-2">
+          <img src={dataSampah.profileUrl || profImg} alt="profpic" className="w-10 h-10 rounded-full object-cover" />
+          <div>
+            <p className="lg:text-smallText text-[12px]">
+              <b>{dataSampah.username}</b>
+              <span className="text-[#8A8A8A]"> · {formattedDate}</span>
+            </p>
+            <p className="lg:text-smallText text-[12px] text-[#5B5B5B] font-medium leading-tight min-h-[32px]">
+              {dataSampah.regency}, {dataSampah.province}
+            </p>
           </div>
-          <p className="lg:text-smallText text-[12px] text-[#222] font-medium overflow-hidden line-clamp-4 my-2">{dataSampah.description}</p>
-          <img src={dataSampah.photoUrl} alt="buktiFoto" className="rounded-lg" />
-          <div className="flex items-center justify-between mt-4">
-            <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
-              <IoMdShare />
-              <FaRegBookmark />
-            </div>
+        </div>
+
+        <p className="lg:text-smallText text-[12px] text-[#222] font-medium overflow-hidden line-clamp-4 my-2 flex-grow">{dataSampah.description}</p>
+
+        <div className="w-full aspect-[4/3] rounded-lg overflow-hidden">
+          <img src={dataSampah.photoUrl} alt="buktiFoto" className="w-full h-full object-cover" />
+        </div>
+
+        {/* Tombol bookmark & share */}
+        <div
+          className="flex items-center justify-between mt-4"
+          onClick={(e) => e.stopPropagation()} // ⬅️ Pastikan klik tidak trigger card click
+        >
+          <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
+            <IoMdShare onClick={handleShare} size={20} />
+            {isBookmarked ? <FaBookmark onClick={handleBookmark} size={18} /> : <FaRegBookmark onClick={handleBookmark} size={18} />}
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

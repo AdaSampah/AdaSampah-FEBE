@@ -1,49 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import check1 from "../../assets/DetilLaporan/check1.svg";
 import check2 from "../../assets/DetilLaporan/check2.svg";
 import check3 from "../../assets/DetilLaporan/check3.svg";
+import send from "../../assets/DetilLaporan/send.svg";
+import { axiosInstance } from "../../config";
 
-const DetailKanan = () => {
-  const statusLaporan = "ada";
+const DetailKanan = ({ detailLaporan }) => {
+  const [inputDeskripsi, setInputDeskripsi] = useState("");
+
+  const handleInputChange = (e) => {
+    setInputDeskripsi(e.target.value);
+  };
+
+  const handleSendClick = async () => {
+    if (inputDeskripsi.trim() === "") return;
+
+    try {
+      const response = await axiosInstance.patch(`/reports/${detailLaporan?._id}/status`, {
+        statusDescription: inputDeskripsi, // kalau memang backend perlu ini!
+      });
+      const data = response.data;
+
+      if (data.status === "success") {
+        alert("Status berhasil diperbarui!");
+        setInputDeskripsi("");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi kesalahan.");
+    } finally {
+      window.location.reload();
+    }
+  };
 
   return (
     <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] md:rounded-3xl h-full rounded-2xl flex-1">
-      <div className="p-10">
-        <h6 className="text-normal font-bold text-center">PROSES LAPORAN</h6>
-        <br />
-        <div className="flex items-start gap-4 my-4">
-          <>
-            <img src={check1} alt="check1" />
-            <div>
-              <p className="text-[#0084FF] font-semibold md:text-xl text-normal">Diverifikasi</p>
-              <p className="text-[#8A8A8A] font-medium] sm:text-sm text-[12px] ">Rabu, 24 Januari 2024 · 08:24 WIB</p>
-              <p className="text-[#5B5B5B] font-bold sm:text-sm text-[12px] ">PEMERINTAH KOTA BOGOR </p>
-              <p className="text-[#222] font-medium sm:text-sm text-[12px] ">Baik kak, akan kami cek dan koordinasikan dengan dinas kehutanan </p>
+      <h6 className="text-normal font-bold text-center pt-10">PROSES LAPORAN</h6>
+      <br />
+
+      <div className="px-10 pb-10 flex flex-col justify-between">
+        <div>
+          {detailLaporan?.status.map((status, index) => (
+            <div key={index} className="flex items-start gap-4 my-4">
+              <img src={status.statusName === "Diverifikasi" ? check1 : status.statusName === "Diproses" ? check2 : check3} alt="check" />
+              <div>
+                <p
+                  className="font-semibold md:text-xl text-normal"
+                  style={{
+                    color: status.statusName === "Diverifikasi" ? "#0084FF" : status.statusName === "Diproses" ? "#C9AE17" : "#53A88C",
+                  }}
+                >
+                  {status.statusName}
+                </p>
+                <p className="text-[#8A8A8A] font-medium sm:text-sm text-[12px]">{status.time}</p>
+                <p className="text-[#5B5B5B] font-bold sm:text-sm text-[12px]">PEMERINTAH KOTA BOGOR</p>
+                <p className="text-[#222] font-medium sm:text-sm text-[12px]">{status.statusDescription}</p>
+              </div>
             </div>
-          </>
+          ))}
         </div>
-        <div className="flex items-start gap-4 my-4">
-          <>
-            <img src={check2} alt="check1" />
-            <div>
-              <p className="text-[#C9AE17] font-semibold md:text-xl text-normal">Diproses</p>
-              <p className="text-[#8A8A8A] font-medium] sm:text-sm text-[12px] ">Sabtu, 27 Januari 2024 · 13:27 WIB</p>
-              <p className="text-[#5B5B5B] font-bold sm:text-sm text-[12px] ">PEMERINTAH KOTA BOGOR</p>
-              <p className="text-[#222] font-medium sm:text-sm text-[12px] ">Tim kami sedang berusaha semaksimal mungkin dan akan kami usahakan secepatnya menangkap para pelaku penebangan liar tersebut 🙏 </p>
-            </div>
-          </>
-        </div>
-        <div className="flex items-start gap-4 my-4">
-          <>
-            <img src={check3} alt="check1" />
-            <div>
-              <p className="text-[#53A88C] font-semibold md:text-xl text-normal">Selesai</p>
-              <p className="text-[#8A8A8A] font-medium] sm:text-sm text-[12px] ">Sabtu, 27 Januari 2024 · 13:27 WIB</p>
-              <p className="text-[#5B5B5B] font-bold sm:text-sm text-[12px] ">PEMERINTAH KOTA BOGOR</p>
-              <p className="text-[#222] font-medium sm:text-sm text-[12px] ">Pelaku penebangan liar sudah ditangkap. Terimakasih atas laporan Anda. Apabila ada keresahan lainnya, jangan ragu untuk melaporkan 👍</p>
-            </div>
-          </>
-        </div>
+        {detailLaporan?.status.length < 3 && (
+          <div className="flex items-center border rounded-full px-4 py-2 mt-6">
+            <input type="text" value={inputDeskripsi} onChange={handleInputChange} placeholder="Tulis deskripsi proses..." required className="flex-1 outline-none text-sm sm:text-base" />
+            <button onClick={handleSendClick} className="ml-2 cursor-pointer">
+              <img src={send} alt="send icon" className="w-6 h-6" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
