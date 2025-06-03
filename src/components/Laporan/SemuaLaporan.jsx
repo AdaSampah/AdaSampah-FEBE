@@ -3,15 +3,15 @@ import Card from "./Card";
 import terbaruIcon from "../../assets/Laporan/terbaru.svg";
 import SkeletonCard from "../Skeleton/SkeletonCard";
 
-export const SemuaLaporan = ({ dataSampah }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+export const SemuaLaporan = ({ dataSampah, isLoading }) => {
+  // const [isLoading, setIsLoading] = useState(true);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 2000);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <>
@@ -21,7 +21,7 @@ export const SemuaLaporan = ({ dataSampah }) => {
       </div>
       <div className="cardContainer flex flex-wrap justify-start gap-8 mt-12">
         {isLoading
-          ? [...Array(3)].map((_, index) => <SkeletonCard key={index} />) // Tampilkan 3 skeleton card saat loading
+          ? [...Array(6)].map((_, index) => <SkeletonCard key={index} />) // Tampilkan 3 skeleton card saat loading
           : dataSampah.map((item, index) => <Card dataSampah={item} index={index} key={index} />)}
       </div>
     </>
