@@ -46,8 +46,10 @@ export const Laporan = () => {
 
     fetchDataSampah();
   }, []);
-  console.log(dataSampah);
+
   const [searchParams, setSearchParams] = useState(null);
+  console.log(searchParams);
+
   return (
     <>
       <HeroLaporan setSearchParams={setSearchParams} />

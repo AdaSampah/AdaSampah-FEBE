@@ -122,7 +122,7 @@ export default function LaporanUser() {
 
       {/* DAFTAR LAPORAN */}
       <div className="cardContainer flex flex-wrap justify-center gap-8 mt-6 mb-20">
-        {laporan.length > 0 ? laporan.map((item) => <Card dataSampah={item} key={item._id} />) : <p className="text-center w-full text-gray-500">Tidak ada laporan ditemukan.</p>}
+        {laporan.length > 0 ? laporan.map((item) => <Card dataSampah={item} key={item._id} />) : <p className="text-center w-full text-gray-500">Anda belum membuat laporan.</p>}
       </div>
     </section>
   );

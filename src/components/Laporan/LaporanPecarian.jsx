@@ -1,15 +1,15 @@
 import React from "react";
 import Card from "./Card";
-import dummyLaporan from "./dummyLaporan";
 
 export const LaporanPencarian = ({ searchParams, dataSampah }) => {
-  const { keyword, provinsi } = searchParams;
-
+  const { keyword, regency } = searchParams;
+  console.log(searchParams);
   const hasilPencarian = dataSampah.filter((item) => {
-    const cocokProvinsi = provinsi ? item.province.toLowerCase().includes(provinsi) : true;
-    const cocokKeyword = keyword ? item.description.toLowerCase().includes(keyword) : true;
+    const cocokKabupaten = regency ? item.regency.toLowerCase().includes(regency.toLowerCase()) : true;
 
-    return cocokProvinsi && cocokKeyword;
+    const cocokKeyword = keyword ? item.description.toLowerCase().includes(keyword.toLowerCase()) : true;
+
+    return cocokKabupaten && cocokKeyword;
   });
 
   return (
