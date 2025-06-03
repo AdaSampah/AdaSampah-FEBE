@@ -10,6 +10,7 @@ import trashIcon from "../../assets/DetilLaporan/trash.svg";
 import Bukti from "../../assets/DetilLaporan/bukti.jpg";
 import { axiosInstance } from "../../config";
 import { UserContext } from "../../context/UserContext";
+import { toast } from "react-hot-toast";
 
 const DetailKiri = ({ detailLaporan }) => {
   const { user } = useContext(UserContext);
@@ -30,7 +31,9 @@ const DetailKiri = ({ detailLaporan }) => {
     const checkIsSaved = async () => {
       try {
         if (!user) return; // Jika belum login, skip
-        const res = await axiosInstance.get(`/reports/${detailLaporan._id}/saved`);
+        const res = await axiosInstance.get(
+          `/reports/${detailLaporan._id}/saved`
+        );
         if (res.data && res.data.data) {
           setIsSaved(res.data.data.includes(user?.userId));
         }
@@ -66,7 +69,7 @@ const DetailKiri = ({ detailLaporan }) => {
 
   const handleSaveToggle = async () => {
     if (!user) {
-      alert("Silakan login terlebih dahulu untuk menyimpan laporan!");
+      toast.error("Silakan login terlebih dahulu untuk menyimpan laporan!");
       return;
     }
 
@@ -99,33 +102,45 @@ const DetailKiri = ({ detailLaporan }) => {
         <div className="p-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <img src={detailLaporan?.profileUrl || profImg} alt="profpic" className="2xl:w-14 2xl:h-14 md:w-12 md:h-12 w-10 h-10 rounded-full object-cover" />
+              <img
+                src={detailLaporan?.profileUrl || profImg}
+                alt="profpic"
+                className="2xl:w-14 2xl:h-14 md:w-12 md:h-12 w-10 h-10 rounded-full object-cover"
+              />
               <p className="lg:text-[18px] text-[12px]">
                 <b>{detailLaporan?.username}</b>
               </p>
             </div>
             {StatusSekarang === "Diverifikasi" && (
               <div className="flex gap-4">
-                <span className="border-[1px] border-[#0084FF] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#0084FF] bg-[#E5F2FF] font-medium">Diverifikasi</span>
+                <span className="border-[1px] border-[#0084FF] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#0084FF] bg-[#E5F2FF] font-medium">
+                  Diverifikasi
+                </span>
               </div>
             )}
             {StatusSekarang === "Diproses" && (
               <div className="flex gap-4">
-                <span className="border-[1px] border-[#C9AE17] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#C9AE17] bg-[#FFF8D1] font-medium">Diproses</span>
+                <span className="border-[1px] border-[#C9AE17] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#C9AE17] bg-[#FFF8D1] font-medium">
+                  Diproses
+                </span>
               </div>
             )}
             {StatusSekarang === "Selesai" && (
               <div className="flex gap-4">
-                <span className="border-[1px] border-[#53A88C] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#53A88C] bg-[#E2FFF5] font-medium">Selesai</span>
+                <span className="border-[1px] border-[#53A88C] rounded-[40px] sm:py-2 sm:px-4 py-1 px-3 sm:text-sm text-[12px] text-[#53A88C] bg-[#E2FFF5] font-medium">
+                  Selesai
+                </span>
               </div>
             )}
           </div>
           <div className="my-4">
             <p className="lg:text-normal text-sm text-[#5B5B5B] font-medium">
-              <span className="font-bold">Lokasi :</span> {detailLaporan?.regency}, {detailLaporan?.province}
+              <span className="font-bold">Lokasi :</span>{" "}
+              {detailLaporan?.regency}, {detailLaporan?.province}
             </p>
             <p className="lg:text-normal text-sm text-[#5B5B5B] font-medium">
-              <span className="font-bold">Detil Lokasi :</span> {detailLaporan?.detailLocation}
+              <span className="font-bold">Detil Lokasi :</span>{" "}
+              {detailLaporan?.detailLocation}
             </p>
             <p className="lg:text-normal text-sm text-[#5B5B5B] font-medium">
               <span className="font-bold">Waktu Lapor :</span> {formattedDate}
@@ -142,7 +157,11 @@ const DetailKiri = ({ detailLaporan }) => {
           <div className="flex items-center justify-between mt-4">
             <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
               <img src={shareIcon} alt="shareicon" onClick={handleShare} />
-              <img src={isSaved ? bookMarkFill : bookMarkIcon} alt="bookmarkicon" onClick={handleSaveToggle} />
+              <img
+                src={isSaved ? bookMarkFill : bookMarkIcon}
+                alt="bookmarkicon"
+                onClick={handleSaveToggle}
+              />
             </div>
           </div>
         </div>
@@ -152,10 +171,17 @@ const DetailKiri = ({ detailLaporan }) => {
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="max-w-screen-lg w-full mx-4">
             <div className="relative">
-              <span className="absolute top-2 right-2 text-white cursor-pointer md:text-5xl text-3xl" onClick={closeModal}>
+              <span
+                className="absolute top-2 right-2 text-white cursor-pointer md:text-5xl text-3xl"
+                onClick={closeModal}
+              >
                 &times;
               </span>
-              <img src={detailLaporan?.photoUrl} alt="modalImage" className="rounded-lg w-full max-h-[500px] object-cover" />
+              <img
+                src={detailLaporan?.photoUrl}
+                alt="modalImage"
+                className="rounded-lg w-full max-h-[500px] object-cover"
+              />
             </div>
           </div>
         </div>

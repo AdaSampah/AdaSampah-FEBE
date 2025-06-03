@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createMap, addMarker, getPlaceNameByCoordinate } from "../../utils/map";
+import {
+  createMap,
+  addMarker,
+  getPlaceNameByCoordinate,
+} from "../../utils/map";
 
 const MapSection = ({ latitude, longitude }) => {
   const mapInstanceRef = useRef(null);
   const [placeName, setPlaceName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const mapId = `map-${Math.random().toString(36).substr(2, 9)}`; // Generate unique ID
+  const mapId = `map-${Math.random().toString(36).substr(2, 9)}`;
 
   useEffect(() => {
     if (!latitude || !longitude) {
@@ -32,8 +36,8 @@ const MapSection = ({ latitude, longitude }) => {
         if (!mapInstanceRef.current) {
           mapInstanceRef.current = createMap(mapSelector, {
             center: [parseFloat(latitude), parseFloat(longitude)],
-            zoom: 15,
-            scrollWheelZoom: true,
+            zoom: 18,
+            scrollWheelZoom: false,
           });
 
           // Tambahkan marker
@@ -80,7 +84,9 @@ const MapSection = ({ latitude, longitude }) => {
   if (!latitude || !longitude) {
     return (
       <div className="w-full bg-white rounded-lg shadow-md p-6">
-        <h4 className="text-lg font-semibold mb-4 text-gray-800">Lokasi Sampah</h4>
+        <h4 className="text-lg font-semibold mb-4 text-gray-800">
+          Lokasi Sampah
+        </h4>
         <div className="flex items-center justify-center h-64 bg-gray-100 rounded-lg">
           <p className="text-gray-500">Koordinat tidak tersedia</p>
         </div>
@@ -92,10 +98,13 @@ const MapSection = ({ latitude, longitude }) => {
     <div className="w-full cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] bg-white rounded-lg mt-8 overflow-hidden">
       {/* Header */}
       <div className="p-4 border-b border-gray-200">
-        <h4 className="text-lg font-semibold text-gray-800 mb-2">Lokasi Sampah</h4>
+        <h4 className="text-lg font-semibold text-gray-800 mb-2">
+          Lokasi Sampah
+        </h4>
         <div className="space-y-1">
           <p className="text-sm text-gray-600">
-            <span className="font-medium">Koordinat:</span> {latitude}, {longitude}
+            <span className="font-medium">Koordinat:</span> {latitude},{" "}
+            {longitude}
           </p>
           {!mapLoaded ? (
             <p className="text-sm text-gray-500">Memuat nama tempat...</p>
@@ -109,7 +118,11 @@ const MapSection = ({ latitude, longitude }) => {
 
       {/* Map Container */}
       <div className="relative">
-        <div id={mapId} className="w-full h-72 md:h-96 z-10" style={{ minHeight: "256px" }} />
+        <div
+          id={mapId}
+          className="w-full h-72 md:h-96 z-10"
+          style={{ minHeight: "256px" }}
+        />
 
         {/* Loading Overlay */}
         {(isLoading || !mapLoaded) && (
@@ -124,7 +137,10 @@ const MapSection = ({ latitude, longitude }) => {
         {/* Fallback jika peta tidak muncul */}
         {!isLoading && !mapLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-red-50 bg-opacity-70">
-            <p className="text-red-600 text-center px-4">Gagal memuat peta. Pastikan Leaflet dan Maptiler SDK telah dimuat dengan benar.</p>
+            <p className="text-red-600 text-center px-4">
+              Gagal memuat peta. Pastikan Leaflet dan Maptiler SDK telah dimuat
+              dengan benar.
+            </p>
           </div>
         )}
       </div>

@@ -17,6 +17,7 @@ import LaporanDisimpan from "./components/LaporanSaya/LaporanDisimpan";
 import Education from "./pages/Education";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 import { Toaster } from "react-hot-toast";
 
@@ -26,6 +27,7 @@ function App() {
   function handleLogin() {
     setIsLogin(!isLogin);
   }
+
   return (
     <UserContextProvider>
       <BrowserRouter>
@@ -57,10 +59,31 @@ function App() {
           <Route path="/laporan/:id" element={<DetailLaporan />} />
           <Route path="/laporkan" element={<Laporkan />} />
           <Route path="/peta-sebaran" element={<PetaSebaran />} />
-          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route
+            path="/edit-profile"
+            element={
+              <ProtectedRoute>
+                <EditProfile />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/" element={<LaporanSaya />}>
-            <Route path="laporan-saya" element={<LaporanUser />} />
-            <Route path="disimpan" element={<LaporanDisimpan />} />
+            <Route
+              path="/laporan-saya"
+              element={
+                <ProtectedRoute>
+                  <LaporanUser />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/disimpan"
+              element={
+                <ProtectedRoute>
+                  <LaporanDisimpan />
+                </ProtectedRoute>
+              }
+            />
           </Route>
           <Route path="/education" element={<Education />} />
         </Routes>

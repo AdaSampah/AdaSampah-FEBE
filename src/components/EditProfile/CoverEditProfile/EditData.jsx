@@ -128,7 +128,7 @@ export default function EditData() {
       formData.append("fullName", fullName);
       formData.append("username", username);
       formData.append("email", email);
-      if (photo) formData.append("photo", photo);
+      if (photo) formData.append("profileUrl", photo);
 
       const res = await axiosInstance.put(`/user/${user.userId}`, formData, {
         withCredentials: true,

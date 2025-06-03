@@ -17,10 +17,17 @@ export default function HomePerkenalan() {
             </span>
           </h2>
           <p className="text-base md:text-[20px] text-gray-700 max-w-xl">
-            AdaSampah adalah platform online yang menghubungkan masyarakat
-            dengan pemerintah. Kami menyediakan wadah bagi masyarakat untuk
-            melaporkan penumpukan sampah dan mendukung upaya pelestarian
-            lingkungan secara kolaboratif.
+            AdaSampah adalah platform inovatif yang menghubungkan masyarakat
+            dengan pemerintah untuk bersama-sama mewujudkan lingkungan yang
+            bersih dan lestari. Melalui fitur unggulan{" "}
+            <span className="font-semibold text-[#129990]">
+              "Kenali Sampahmu"
+            </span>
+            , pengguna dapat mengunggah foto sampah dan secara otomatis
+            memperoleh informasi jenis, solusi penanganan, hingga inspirasi
+            pemanfaatan kreatif dari sampah tersebut. Jadikan setiap laporan dan
+            aksi Anda bagian dari perubahan nyata menuju pengelolaan sampah yang
+            cerdas, edukatif, dan berkelanjutan.
           </p>
         </div>
       </div>
