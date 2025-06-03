@@ -38,7 +38,7 @@ const DetailKanan = ({ detailLaporan }) => {
   };
 
   return (
-    <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] md:rounded-3xl h-full rounded-2xl flex-1">
+    <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] md:rounded-3xl h-full rounded-2xl ">
       <h6 className="text-normal font-bold text-center pt-10">PROSES LAPORAN</h6>
       <br />
 

@@ -39,14 +39,15 @@ const DetailLaporan = () => {
       <section className="md:py-[120px] py-[100px] 2xl:px-28 sm:px-16 p-6">
         <h3 className="font-extrabold 2xl:text-[40px] md:text-3xl text-2xl text-center my-6">Detail laporan </h3>
         <div className="max-w-7xl w-full mx-auto ">
-          <div className="containerDetail flex lg:flex-row flex-col flex-wrap md:gap-8 gap-3 justify-between items-stretch">
-            <div className="lg:flex-1 w-full">
+          <div className="containerDetail grid lg:grid-cols-2 grid-cols-1 md:gap-8 gap-3">
+            <div className="w-full">
               <DetailKiri detailLaporan={detailLaporan} />
             </div>
-            <div className="lg:flex-1 w-full">
+            <div className="w-full">
               <DetailKanan detailLaporan={detailLaporan} />
             </div>
           </div>
+
           <MapSection latitude={detailLaporan?.latDetail} longitude={detailLaporan?.lonDetail} />
         </div>
       </section>

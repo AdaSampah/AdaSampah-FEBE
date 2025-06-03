@@ -15,7 +15,6 @@ const DetailKiri = ({ detailLaporan }) => {
   const { user } = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  console.log(user);
 
   let StatusSekarang = "";
   if (detailLaporan?.status?.length) {
@@ -24,12 +23,10 @@ const DetailKiri = ({ detailLaporan }) => {
     StatusSekarang = status?.statusName;
   }
 
-  console.log(detailLaporan);
-  // Mengecek status save ketika komponen di-mount
   useEffect(() => {
     const checkIsSaved = async () => {
       try {
-        if (!user) return; // Jika belum login, skip
+        if (!user) return;
         const res = await axiosInstance.get(`/reports/${detailLaporan._id}/saved`);
         if (res.data && res.data.data) {
           setIsSaved(res.data.data.includes(user?.userId));
@@ -95,8 +92,8 @@ const DetailKiri = ({ detailLaporan }) => {
 
   return (
     <>
-      <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)]  md:rounded-3xl rounded-2xl flex-1 h-full">
-        <div className="p-6">
+      <div className="cardKu shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)]  md:rounded-3xl rounded-2xl h-full">
+        <div className="p-6 box-border">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <img src={detailLaporan?.profileUrl || profImg} alt="profpic" className="2xl:w-14 2xl:h-14 md:w-12 md:h-12 w-10 h-10 rounded-full object-cover" />
@@ -130,14 +127,12 @@ const DetailKiri = ({ detailLaporan }) => {
             <p className="lg:text-normal text-sm text-[#5B5B5B] font-medium">
               <span className="font-bold">Waktu Lapor :</span> {formattedDate}
             </p>
+            <p className="text-sm text-[#5B5B5B] font-medium break-words whitespace-pre-wrap mt-4">
+              <span className="font-medium">{detailLaporan?.description}</span>
+            </p>
           </div>
 
-          <img
-            src={detailLaporan?.photoUrl}
-            alt="buktiFoto"
-            className="w-full aspect-[4/3] object-cover 2xl:min-w-[600px] md:min-w-[450px] min-w-[250px] max-h-96 md:rounded-2xl rounded-xl cursor-pointer"
-            onClick={() => openModal(detailLaporan?.photoUrl)}
-          />
+          <img src={detailLaporan?.photoUrl} alt="buktiFoto" className="w-full aspect-[4/3] object-cover  max-h-96 md:rounded-2xl rounded-xl cursor-pointer" onClick={() => openModal(detailLaporan?.photoUrl)} />
 
           <div className="flex items-center justify-between mt-4">
             <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
