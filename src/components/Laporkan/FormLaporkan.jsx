@@ -273,150 +273,146 @@ export default function FormLaporkan() {
             <p className="md:text-body text-normal font-semibold my-3">
               Bukti Kejadian
             </p>
-            {/* Animasi transisi area galeri/kamera */}
-            <div
-              key={imgSource}
-              className="transition-slide-up"
-              style={{
-                animation: "slideUpFadeIn 400ms cubic-bezier(0.4,2,0.6,1) both",
-              }}
-            >
-              {file ? (
-                <>
-                  <div className="flex justify-center w-full mb-4">
-                    <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt="BuktiFoto"
-                        className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
-                      />
-                      <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          type="button"
-                          onClick={handleRemoveImage}
-                          className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
-                          title="Hapus Gambar"
-                        >
-                          <FiTrash2 size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current.click()}
-                          className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
-                          title="Edit Gambar"
-                        >
-                          <FiEdit2 size={18} />
-                        </button>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          id="editGambar"
-                          className="hidden"
-                          onChange={handleFileInputChange}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-col md:flex-row gap-3 mb-2">
-                    <button
-                      type="button"
-                      className={`flex-1 border ${
-                        imgSource === "galeri"
-                          ? "border-[#096B68] bg-[#e0f7f6]"
-                          : "border-gray-300 bg-white"
-                      } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
-                      onClick={() => handleChangeImgSource("galeri")}
-                    >
-                      Upload Gambar
-                    </button>
-                    <button
-                      type="button"
-                      className={`flex-1 border ${
-                        imgSource === "camera"
-                          ? "border-[#096B68] bg-[#e0f7f6]"
-                          : "border-gray-300 bg-white"
-                      } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
-                      onClick={() => handleChangeImgSource("camera")}
-                    >
-                      Ambil Gambar
-                    </button>
-                  </div>
-                  {imgSource === "galeri" ? (
-                    <label htmlFor="imageLaporkan">
-                      <div
-                        className={`border-dashed border-2 rounded-xl cursor-pointer max-h-[200px] bg-[#f8fefd] hover:shadow-lg hover:border-[#096B68] transition-all flex flex-col justify-center items-center py-10 ${
-                          errors.file ? "border-red-400" : "border-[#b6e6e3]"
-                        }`}
-                        onDrop={handleFileDrop}
-                        onDragOver={handleDragOver}
-                        onBlur={() => handleBlur("file")}
-                        tabIndex={0}
-                      >
-                        <img
-                          src={addPhoto}
-                          alt="iconAddImg"
-                          className="md:w-8 w-6 mb-2"
-                        />
-                        <p className="md:text-normal text-smallText text-center">
-                          Drag and drop foto atau klik untuk upload
-                        </p>
-                        <p className="md:text-normal text-smallText text-center text-[#6B7280]">
-                          JPEG, JPG, PNG (5MB max)
-                        </p>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          id="imageLaporkan"
-                          className="hidden"
-                          onChange={handleFileInputChange}
-                        />
-                      </div>
-                    </label>
-                  ) : (
-                    <div className="flex flex-col items-center gap-3 py-4 relative">
-                      <div className="w-full flex flex-col items-center relative">
-                        <div className="relative w-full max-w-lg aspect-video">
-                          <video
-                            ref={videoRef}
-                            className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
-                            autoPlay
-                            playsInline
-                            muted
-                          />
-                          {/* Action Button */}
-                          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
-                            <select
-                              ref={selectCameraRef}
-                              className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
-                            />
-                            <button
-                              type="button"
-                              onClick={handleTakePicture}
-                              className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
-                              title="Ambil Foto"
-                            >
-                              <FaCamera className="text-xl md:text-2xl" />
-                            </button>
-                          </div>
-                          <canvas
-                            ref={canvasRef}
-                            className="hidden"
-                            width={640}
-                            height={480}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {touched.file && errors.file && (
-                    <p className="text-red-500 text-sm mt-2">{errors.file}</p>
-                  )}
-                </>
-              )}
+            <div className="flex flex-col md:flex-row gap-3 mb-2">
+              <button
+                type="button"
+                className={`flex-1 border ${
+                  imgSource === "galeri"
+                    ? "border-[#096B68] bg-[#e0f7f6]"
+                    : "border-gray-300 bg-white"
+                } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
+                onClick={() => handleChangeImgSource("galeri")}
+              >
+                Upload Gambar
+              </button>
+              <button
+                type="button"
+                className={`flex-1 border ${
+                  imgSource === "camera"
+                    ? "border-[#096B68] bg-[#e0f7f6]"
+                    : "border-gray-300 bg-white"
+                } text-[#096B68] px-5 py-2 rounded-xl font-semibold transition-colors hover:bg-[#e0f7f6]`}
+                onClick={() => handleChangeImgSource("camera")}
+              >
+                Ambil Gambar
+              </button>
             </div>
+            {imgSource === "galeri" ? (
+              <label htmlFor="imageLaporkan">
+                <div className="transition-slide-up">
+                  <div
+                    className={`border-dashed border-2 rounded-xl cursor-pointer max-h-[200px] bg-[#f8fefd] hover:shadow-lg hover:border-[#096B68] transition-all flex flex-col justify-center items-center py-10 ${
+                      errors.file ? "border-red-400" : "border-[#b6e6e3]"
+                    }`}
+                    onDrop={handleFileDrop}
+                    onDragOver={handleDragOver}
+                    onBlur={() => handleBlur("file")}
+                    tabIndex={0}
+                  >
+                    <img
+                      src={addPhoto}
+                      alt="iconAddImg"
+                      className="md:w-8 w-6 mb-2"
+                    />
+                    <p className="md:text-normal text-smallText text-center">
+                      Drag and drop foto atau klik untuk upload
+                    </p>
+                    <p className="md:text-normal text-smallText text-center text-[#6B7280]">
+                      JPEG, JPG, PNG (5MB max)
+                    </p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      id="imageLaporkan"
+                      className="hidden"
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
+                </div>
+              </label>
+            ) : (
+              <div
+                className="transition-slide-up"
+                style={{
+                  animation:
+                    "slideUpFadeIn 400ms cubic-bezier(0.4,2,0.6,1) both",
+                }}
+              >
+                <div className="flex flex-col items-center gap-3 py-4 relative">
+                  <div className="w-full flex flex-col items-center relative">
+                    <div className="relative w-full max-w-lg aspect-video">
+                      <video
+                        ref={videoRef}
+                        className="rounded-xl border border-[#e0f7f6] shadow w-full h-full object-cover bg-black"
+                        autoPlay
+                        playsInline
+                        muted
+                      />
+                      {/* Action Button */}
+                      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-row items-center justify-between w-full px-2 gap-2 md:gap-3">
+                        <select
+                          ref={selectCameraRef}
+                          className="w-full md:w-auto px-3 py-2 rounded border border-[#b6e6e3] text-[#096B68] bg-white max-w-[220px] text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleTakePicture}
+                          className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-[#129990] hover:bg-[#096b69] text-white rounded-full font-bold shadow transition p-0"
+                          title="Ambil Foto"
+                        >
+                          <FaCamera className="text-xl md:text-2xl" />
+                        </button>
+                      </div>
+                      <canvas
+                        ref={canvasRef}
+                        className="hidden"
+                        width={640}
+                        height={480}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {file && imgSource === "galeri" && (
+              <div className="flex justify-center w-full mb-4">
+                <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="BuktiFoto"
+                    className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
+                  />
+                  <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
+                      title="Hapus Gambar"
+                    >
+                      <FiTrash2 size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current.click()}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
+                      title="Edit Gambar"
+                    >
+                      <FiEdit2 size={18} />
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      id="editGambar"
+                      className="hidden"
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            {touched.file && errors.file && (
+              <p className="text-red-500 text-sm mt-2">{errors.file}</p>
+            )}
             {/* Deskripsi */}
             <div className="mt-4">
               <label htmlFor="deskripsiLaporan">

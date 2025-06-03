@@ -208,6 +208,7 @@ export default function EditData() {
               placeholder="email@gmail.com"
               onChange={handleEmailChange}
               required
+              disabled
             />
             {errors.email && (
               <div className="text-red-500 text-xs mt-1">{errors.email}</div>
@@ -239,7 +240,7 @@ export default function EditData() {
                 />
               </label>
               <span className="text-xs text-gray-400 mt-1">
-                Maksimal 1 Mb, format: jpg, jpeg, png
+                Format: jpg, jpeg, png
               </span>
             </div>
           </div>

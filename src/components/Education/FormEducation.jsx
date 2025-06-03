@@ -257,14 +257,7 @@ export default function FormEducation() {
                   </button>
                 </div>
                 {/* Animasi transisi area galeri/kamera */}
-                <div
-                  key={imgSource}
-                  className="transition-slide-up"
-                  style={{
-                    animation:
-                      "slideUpFadeIn 400ms cubic-bezier(.4,2,.6,1) both",
-                  }}
-                >
+                <div key={imgSource} className="transition-slide-up">
                   {imgSource === "galeri" ? (
                     <label htmlFor="imageEducation">
                       <div
