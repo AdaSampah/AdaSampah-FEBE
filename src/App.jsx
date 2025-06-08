@@ -18,6 +18,7 @@ import Education from "./pages/Education";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import NotFound from "./pages/NotFound";
 
 import { Toaster } from "react-hot-toast";
 
@@ -86,6 +87,7 @@ function App() {
             />
           </Route>
           <Route path="/education" element={<Education />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>

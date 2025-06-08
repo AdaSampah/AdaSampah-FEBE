@@ -13,13 +13,13 @@ export default function HomeInvitation() {
       </div>
       <div className="w-full max-w-xl md:max-w-[400px] lg:max-w-[566px] flex flex-col items-center md:items-start text-center md:text-left">
         <h2 className="font-extrabold text-2xl sm:text-3xl md:text-[32px] lg:text-[40px] xl:text-[48px] w-full mb-4 md:mb-[32px] leading-tight">
-          Mari Bersama <span className="text-[#129990]">Lawan</span> Kerusakan
-          Alam
+          Bersama <span className="text-[#129990]">Atasi</span> Masalah Sampah
         </h2>
         <p className="mb-6 md:mb-[32px] text-sm sm:text-base md:text-[16px] lg:text-[18px] xl:text-[20px] w-full text-gray-700">
-          Alam adalah rumah bagi kita semua. Melindunginya adalah tanggung jawab
-          kita bersama. Laporkan tindakan merusak alam yang Anda temukan melalui
-          Ecotection.
+          Sampah adalah tanggung jawab kita bersama. Laporkan penemuan sampah
+          liar, pembuangan sembarangan, atau masalah lingkungan di sekitar Anda
+          melalui AdaSampah. Mari wujudkan lingkungan yang lebih bersih dan
+          sehat!
         </p>
         <div className="w-full flex justify-center md:justify-start">
           <a

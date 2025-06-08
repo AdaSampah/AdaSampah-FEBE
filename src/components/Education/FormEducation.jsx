@@ -3,6 +3,8 @@ import addPhoto from "../../assets/Laporkan/addPhoto.svg";
 import { FiTrash2, FiEdit2, FiCheckCircle } from "react-icons/fi";
 import { ImSpinner2 } from "react-icons/im";
 import { FaCamera } from "react-icons/fa";
+import { mlAxiosInstance } from "../../config";
+import { ToastBar } from "react-hot-toast";
 
 import * as cameraUtils from "../../utils/camera";
 
@@ -77,52 +79,22 @@ export default function FormEducation() {
     }
   };
 
-  // Fungsi prediksi (ganti dengan REST API ML nanti)
+  // Fungsi prediksi
   const predictWaste = async (imageFile) => {
     setLoading(true);
-    // Nanti ganti pake axios atau fetch untuk kirim gambar ke API ML
-    // Contoh dengan axios:
-    // import axios from "axios";
-    // const formData = new FormData();
-    // formData.append('file', imageFile);
-    // const response = await axios.post('URL_API_ML', formData, {
-    //   headers: { 'Content-Type': 'multipart/form-data' }
-    // });
-    // const data = response.data;
-    // return { jenis: data.jenis, kategori: data.kategori, info: data.info, link: data.link };
-
-    // Simulasi delay dan hasil prediksi dummy
-    await new Promise((r) => setTimeout(r, 1200));
-    // Dummy: randomize antara organik/anorganik dengan kategori
-    const dummyData = [
-      {
-        jenis: "Organik",
-        kategori: "Sisa Makanan",
-        info: "Sampah organik dapat diolah menjadi kompos atau pupuk cair untuk tanaman.",
-        link: "https://www.youtube.com/watch?v=QwQ2FQK5KjA",
-      },
-      {
-        jenis: "Anorganik",
-        kategori: "Plastik",
-        info: "Sampah anorganik seperti plastik dapat didaur ulang menjadi kerajinan tangan atau barang berguna lainnya.",
-        link: "https://www.youtube.com/watch?v=8vK2wM5Qn1g",
-      },
-      {
-        jenis: "Anorganik",
-        kategori: "Kaleng",
-        info: "Kaleng bekas dapat dimanfaatkan sebagai pot tanaman atau bahan kerajinan.",
-        link: "https://www.youtube.com/watch?v=2pQJwQwQwQw",
-      },
-      {
-        jenis: "Anorganik",
-        kategori: "Kaca",
-        info: "Sampah kaca dapat didaur ulang menjadi barang baru atau digunakan kembali sebagai wadah.",
-        link: "https://www.youtube.com/watch?v=3kQJwQwQwQw",
-      },
-    ];
-    // Pilih salah satu secara acak
-    const res = dummyData[Math.floor(Math.random() * dummyData.length)];
-    return res;
+    try {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      const response = await mlAxiosInstance.post("/predictModel2", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data;
+    } catch (err) {
+      toast.error("Gagal memproses gambar. Coba lagi.");
+      return null;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileInputChange = (e) => {
@@ -169,19 +141,11 @@ export default function FormEducation() {
 
   return (
     <section className="relative w-full">
-      {/* Dekorasi kiri */}
-      <div className="hidden md:block absolute left-0 top-0 h-full w-32 z-0">
-        <div className="h-2/3 w-32 bg-gradient-to-br from-[#e0f7f6] to-transparent rounded-br-[80px] blur-[2px]" />
-      </div>
-      {/* Dekorasi kanan */}
-      <div className="hidden md:block absolute right-0 top-0 h-full w-32 z-0">
-        <div className="h-2/3 w-32 bg-gradient-to-bl from-[#e0f7f6] to-transparent rounded-bl-[80px] blur-[2px]" />
-      </div>
       <div className="flex justify-center w-full px-2 py-10 bg-transparent relative z-10">
-        <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl border border-[#e0f7f6] p-0 overflow-hidden">
+        <div className="w-full max-w-5xl bg-white p-0 overflow-hidden">
           <form className="sm:p-12 p-5" onSubmit={handlePredict}>
             <h3 className="text-[28px] md:text-[32px] font-extrabold text-center text-[#096B68] mb-2 tracking-tight">
-              Edukasi Sampah
+              Kenali Sampahmu{" "}
             </h3>
             <p className="text-center text-gray-500 mb-8 text-base md:text-lg">
               Upload foto sampahmu dan dapatkan informasi jenis serta inspirasi
@@ -361,7 +325,7 @@ export default function FormEducation() {
               <button
                 type="submit"
                 disabled={!file || loading}
-                className={`flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-[#129990] to-[#096B68] text-white rounded-full text-base font-bold shadow-lg hover:brightness-110 transition-all duration-150 ${
+                className={`flex items-center gap-2 px-8 py-3 bg-[#096B68] hover:bg-[#075A57] text-white rounded-[40px] text-base font-bold shadow-md transition-colors duration-200 ${
                   !file || loading ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               >
@@ -377,37 +341,96 @@ export default function FormEducation() {
             </div>
             {/* Output hasil prediksi */}
             {result && (
-              <div className="mt-10 p-6 bg-gradient-to-br from-[#e0f7f6] to-[#f8fefd] rounded-2xl shadow-inner border border-[#b6e6e3] flex flex-col items-center transition-all duration-300">
-                <div className="flex items-center gap-2 mb-2">
-                  <FiCheckCircle
-                    size={28}
-                    className="text-[#129990] bg-white rounded-full"
-                  />
-                  <h4 className="text-xl font-bold text-[#096B68]">
-                    Jenis Sampah:{" "}
-                    <span className="font-extrabold">{result.jenis}</span>
-                    {result.kategori && (
-                      <>
-                        {" "}
-                        <span className="font-normal text-gray-600">
-                          ({result.kategori})
-                        </span>
-                      </>
-                    )}
-                  </h4>
+              <div className="cardKu items-center shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] mt-10 md:rounded-3xl rounded-2xl w-full max-w-6xl mx-auto px-0 py-0 border border-[#e0f7f6] bg-white/90 flex flex-col gap-6 transition-all duration-300">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 px-8 pt-8">
+                  <div className="flex items-center gap-3">
+                    <FiCheckCircle
+                      size={32}
+                      className="text-[#129990] bg-white rounded-full shadow"
+                    />
+                    <div>
+                      <div className="text-2xl font-bold text-[#096B68] tracking-tight mb-1">
+                        {result.predictedLabel?.charAt(0).toUpperCase() +
+                          result.predictedLabel?.slice(1) || "-"}
+                        {result.scores && (
+                          <span className="ml-3 px-2 py-0.5 text-xs rounded-full bg-[#e0f7f6] text-[#129990] font-semibold align-middle">
+                            {(result.scores * 100).toFixed(1)}%
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-500 font-medium">
+                        Prediksi Jenis Sampah
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-700 text-base text-center">
-                  {result.info}
-                </p>
-                {result.link && (
-                  <a
-                    href={result.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 text-[#129990] underline font-semibold hover:text-[#096B68] transition"
-                  >
-                    Yuk lihat cara pemanfaatannya!
-                  </a>
+                {result.detail && (
+                  <div className="flex flex-col gap-4 px-8 pb-8">
+                    <div className="bg-[#f8fefd] border border-[#e0f7f6] rounded-xl px-5 py-4 mb-2">
+                      <div className="text-xs font-semibold text-[#129990] mb-1 uppercase tracking-wider">
+                        Penanganan
+                      </div>
+                      <div className="text-gray-800 text-base leading-relaxed whitespace-pre-line">
+                        {result.detail.handling}
+                      </div>
+                    </div>
+                    {result.detail.reuse_recommendations &&
+                      result.detail.reuse_recommendations.length > 0 && (
+                        <div className="bg-[#f8fefd] border border-[#e0f7f6] rounded-xl px-5 py-4 mb-2">
+                          <div className="text-xs font-semibold text-[#129990] mb-1 uppercase tracking-wider">
+                            Rekomendasi Pemanfaatan Ulang
+                          </div>
+                          <ul className="list-disc ml-5 mt-1 text-gray-800 text-base space-y-1">
+                            {result.detail.reuse_recommendations.map(
+                              (item, idx) => (
+                                <li key={idx}>{item}</li>
+                              )
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                    {result.detail.articles &&
+                      result.detail.articles.length > 0 && (
+                        <div>
+                          <div className="text-xs font-semibold text-[#129990] mb-2 uppercase tracking-wider px-1">
+                            Bacaan & Inspirasi
+                          </div>
+                          <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+                            {result.detail.articles.map((art, idx) => (
+                              <div
+                                key={idx}
+                                className="cardKu flex flex-col bg-[#f8fefd] border border-[#e0f7f6] rounded-2xl p-0 shadow-[0px_2px_8px_0px_rgba(0,0,0,0.10)] hover:shadow-lg transition group w-full overflow-hidden"
+                              >
+                                <a
+                                  href={art.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="block h-full"
+                                >
+                                  <img
+                                    src={art.image}
+                                    alt={art.title}
+                                    className="w-full h-40 object-cover rounded-t-2xl group-hover:scale-105 transition duration-200"
+                                    style={{ minHeight: 120, maxHeight: 180 }}
+                                  />
+                                  <div className="flex flex-col px-5 py-4 h-full">
+                                    <div className="font-bold text-[#096B68] text-base mb-2 text-center truncate">
+                                      {art.title}
+                                    </div>
+                                    <div className="text-gray-600 text-sm max-h-24 overflow-y-auto whitespace-pre-line text-center pr-1 custom-scrollbar">
+                                      {art.description}
+                                    </div>
+                                    <span className="text-xs text-[#129990] underline mt-2 block text-center font-semibold">
+                                      Baca selengkapnya
+                                    </span>
+                                  </div>
+                                </a>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                  </div>
                 )}
               </div>
             )}

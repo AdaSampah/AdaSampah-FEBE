@@ -1,13 +1,13 @@
-import Logo from "../../assets/react.svg";
+import Logo from "../../assets/Home/logo.svg";
 
 export default function HomePerkenalan() {
   return (
-    <section className="w-full py-10 px-4 md:px-0 mt-30">
+    <section className="w-full py-10 px-4 md:px-0 mt-20">
       <div className="flex flex-col md:flex-row justify-center items-center gap-10 md:gap-20">
         <img
           src={Logo}
           alt="logo AdaSampah"
-          className="w-24 h-24 md:w-40 md:h-40 object-contain mb-4 md:mb-0"
+          className="h-34 md:h-60 object-contain mb-4 md:mb-0"
         />
         <div className="text-center md:text-left">
           <h2 className="mb-[32px] font-extrabold text-2xl md:text-[48px]">
