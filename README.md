@@ -76,20 +76,3 @@ AdaSampah adalah platform inovatif yang menghubungkan masyarakat dengan pemerint
 | Beranda                                     | Laporkan                                  | Peta Sebaran                                     | Edukasi                                           | Profil                                |
 | ------------------------------------------- | ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------- | ------------------------------------- |
 | ![Beranda](./public/images/screenshot1.png) | ![Laporkan](./public/images/laporkan.png) | ![Peta Sebaran](./public/images/screenshot4.png) | ![Kenali Sampahmu](./public/images/education.png) | ![Profil](./public/images/profil.png) |
-
-## Kontribusi
-
-Kontribusi sangat terbuka! Silakan fork repository ini, buat branch baru, dan ajukan pull request.
-
-## Lisensi
-
-<!-- Ganti dengan lisensi yang Anda gunakan, misal MIT, GPL, dsb -->
-
-Lisensi: MIT
-
----
-
-> **Catatan:**
->
-> - Update bagian demo, screenshot, dan lisensi sesuai kebutuhan Anda.
-> - Jika ada fitur baru, tambahkan pada bagian Fitur Utama.
