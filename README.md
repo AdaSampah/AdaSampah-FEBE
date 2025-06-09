@@ -73,7 +73,7 @@ AdaSampah adalah platform inovatif yang menghubungkan masyarakat dengan pemerint
 
 <!-- Ganti/Update link screenshot di bawah ini sesuai tampilan website Anda -->
 
-| Beranda                                     | Fitur Kenali Sampahmu                     | Peta Sebaran                                     | Edukasi                                           | Profil                                |
+| Beranda                                     | Laporkan                                  | Peta Sebaran                                     | Edukasi                                           | Profil                                |
 | ------------------------------------------- | ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------- | ------------------------------------- |
 | ![Beranda](./public/images/screenshot1.png) | ![Laporkan](./public/images/laporkan.png) | ![Peta Sebaran](./public/images/screenshot4.png) | ![Kenali Sampahmu](./public/images/education.png) | ![Profil](./public/images/profil.png) |
 
