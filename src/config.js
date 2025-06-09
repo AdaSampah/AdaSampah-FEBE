@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: "https://adasampah-backend3-production.up.railway.app",
 });
 
 export const mlAxiosInstance = axios.create({

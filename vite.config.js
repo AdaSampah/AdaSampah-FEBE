@@ -157,6 +157,28 @@ export default defineConfig({
               expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
             },
           },
+          // Tambahkan: cache endpoint user di backend production
+          {
+            urlPattern:
+              /^https:\/\/ada-sampah-back-end\.vercel\.app\/user(\/.*)?|^https:\/\/ada-sampah-back-end\.vercel\.app\/user(\?.*)?$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "user-api-cache",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+          // Tambahkan: cache endpoint reports di backend production
+          {
+            urlPattern:
+              /^https:\/\/ada-sampah-back-end\.vercel\.app\/reports(\/.*)?|^https:\/\/ada-sampah-back-end\.vercel\.app\/reports(\?.*)?$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
         ],
       },
     }),
