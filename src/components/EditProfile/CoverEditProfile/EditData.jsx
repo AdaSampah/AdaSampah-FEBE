@@ -135,7 +135,12 @@ export default function EditData() {
       });
 
       if (res.data?.data) {
-        setUser(res.data.data); // update context
+        // Patch: pastikan userId tetap ada di context user
+        const updatedUser = {
+          ...res.data.data,
+          userId: res.data.data.userId || res.data.data._id, // fallback ke _id jika userId tidak ada
+        };
+        setUser(updatedUser); // update context
         toast.success("Profil berhasil diupdate!");
       }
     } catch (err) {

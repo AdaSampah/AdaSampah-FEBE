@@ -28,7 +28,11 @@ export function UserContextProvider({ children }) {
       const res = await axiosInstance.get("/user/refetch", {
         withCredentials: true,
       });
-      setUser(res.data.data);
+      // Patch: pastikan userId selalu ada di context user
+      setUser({
+        ...res.data.data,
+        userId: res.data.data.userId || res.data.data._id,
+      });
     } catch (err) {
       if (err) {
         console.log("tidak ada user, perlu Login!");
@@ -36,5 +40,11 @@ export function UserContextProvider({ children }) {
     }
   };
 
-  return <UserContext.Provider value={{ user, setUser, dataUserLogin, setDataUserLogin }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider
+      value={{ user, setUser, dataUserLogin, setDataUserLogin }}
+    >
+      {children}
+    </UserContext.Provider>
+  );
 }

@@ -86,7 +86,11 @@ const Card = ({ dataSampah, index, onUpdateSavedReport }) => {
     >
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex items-center gap-2">
-          <img src={dataSampah.profileUrl || profImg} alt="profpic" className="w-10 h-10 rounded-full object-cover aspect-[1/1]" />
+          <img
+            src={dataSampah.profileUrl || profImg}
+            alt="profpic"
+            className="w-10 h-10 rounded-full object-cover aspect-[1/1]"
+          />
           <div>
             <p className="lg:text-smallText text-[12px]">
               <b>{dataSampah.username}</b>
@@ -98,31 +102,50 @@ const Card = ({ dataSampah, index, onUpdateSavedReport }) => {
           </div>
           {StatusSekarang === "Diverifikasi" && (
             <div className="flex gap-4">
-              <span className="border-[1px] border-[#0084FF] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#0084FF] bg-[#E5F2FF] font-medium">Diverifikasi</span>
+              <span className="border-[1px] border-[#0084FF] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#0084FF] bg-[#E5F2FF] font-medium">
+                Diverifikasi
+              </span>
             </div>
           )}
           {StatusSekarang === "Diproses" && (
             <div className="flex gap-4">
-              <span className="border-[1px] border-[#C9AE17] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#C9AE17] bg-[#FFF8D1] font-medium">Diproses</span>
+              <span className="border-[1px] border-[#C9AE17] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#C9AE17] bg-[#FFF8D1] font-medium">
+                Diproses
+              </span>
             </div>
           )}
           {StatusSekarang === "Selesai" && (
             <div className="flex gap-4">
-              <span className="border-[1px] border-[#53A88C] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#53A88C] bg-[#E2FFF5] font-medium">Selesai</span>
+              <span className="border-[1px] border-[#53A88C] rounded-[40px] sm:py-[6px] ml-[2px] sm:px-3 py-1 px-3 sm:text-[13px] text-[11px] text-[#53A88C] bg-[#E2FFF5] font-medium">
+                Selesai
+              </span>
             </div>
           )}
         </div>
 
-        <p className="lg:text-smallText text-[12px] text-[#222] font-medium  line-clamp-3 break-words whitespace-pre-wrap my-2 flex-grow">{dataSampah.description}</p>
+        <p className="lg:text-smallText text-[12px] text-[#222] font-medium  line-clamp-3 break-words whitespace-pre-wrap my-2 flex-grow">
+          {dataSampah.description}
+        </p>
 
         <div className="w-full aspect-[4/3] rounded-lg overflow-hidden">
-          <img src={dataSampah.photoUrl} alt="buktiFoto" className="w-full h-full object-cover" />
+          <img
+            src={dataSampah.photoUrl}
+            alt="buktiFoto"
+            className="w-full h-full object-cover"
+          />
         </div>
 
-        <div className="flex items-center justify-between mt-4" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="flex items-center justify-between mt-4"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
             <IoMdShare onClick={handleShare} size={20} />
-            {isBookmarked ? <FaBookmark onClick={handleBookmark} size={18} /> : <FaRegBookmark onClick={handleBookmark} size={18} />}
+            {isBookmarked ? (
+              <FaBookmark onClick={handleBookmark} size={18} />
+            ) : (
+              <FaRegBookmark onClick={handleBookmark} size={18} />
+            )}
           </div>
         </div>
       </div>
