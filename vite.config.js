@@ -84,6 +84,36 @@ export default defineConfig({
             type: "image/png",
             form_factor: "wide",
           },
+          {
+            src: "/images/mobile1.jpg",
+            sizes: "1220x2712",
+            type: "image/jpeg",
+            form_factor: "narrow",
+          },
+          {
+            src: "/images/mobile2.jpg",
+            sizes: "1220x2712",
+            type: "image/jpeg",
+            form_factor: "narrow",
+          },
+          {
+            src: "/images/mobile3.jpg",
+            sizes: "1220x2712",
+            type: "image/jpeg",
+            form_factor: "narrow",
+          },
+          {
+            src: "/images/mobile4.jpg",
+            sizes: "1220x2712",
+            type: "image/jpeg",
+            form_factor: "narrow",
+          },
+          {
+            src: "/images/mobile5.jpg",
+            sizes: "1220x2712",
+            type: "image/jpeg",
+            form_factor: "narrow",
+          },
         ],
       },
       workbox: {
@@ -172,6 +202,39 @@ export default defineConfig({
           {
             urlPattern:
               /^https:\/\/ada-sampah-back-end\.vercel\.app\/reports(\/.*)?|^https:\/\/ada-sampah-back-end\.vercel\.app\/reports(\?.*)?$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+          // Tambahkan: cache endpoint user di backend production baru
+          {
+            urlPattern:
+              /^https:\/\/adasampah-backend3-production\.up\.railway\.app\/user(\/.*)?|^https:\/\/adasampah-backend3-production\.up\.railway\.app\/user(\?.*)?$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "user-api-cache",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+          // Tambahkan: cache endpoint reports di backend production baru
+          {
+            urlPattern:
+              /^https:\/\/adasampah-backend3-production\.up\.railway\.app\/reports(\/.*)?|^https:\/\/adasampah-backend3-production\.up\.railway\.app\/reports(\?.*)?$/,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 3,
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 },
+            },
+          },
+          {
+            // Tambahkan: cache endpoint paginasi laporan di backend production baru
+            urlPattern:
+              /^https:\/\/adasampah-backend3-production\.up\.railway\.app\/reports\/limit(\?.*)?$/,
             handler: "NetworkFirst",
             options: {
               cacheName: "api-cache",

@@ -210,10 +210,11 @@ export default function Navbar() {
                   Beranda
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/laporkan"
-                  className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
+              {!(user && user.role === "admin") && (
+                <li>
+                  <Link
+                    to="/laporkan"
+                    className={`font-semibold transition-colors hover:text-[#24BBB1] relative pb-2
                   ${
                     location.pathname === "/laporkan"
                       ? "text-[#24BBB1] font-bold after:content-[''] after:block after:absolute after:left-0 after:right-0 after:mx-auto after:-bottom-1.5 after:w-2/3 after:h-1 after:rounded-full after:bg-[#24BBB1] after:opacity-80"
@@ -221,10 +222,11 @@ export default function Navbar() {
                       ? "text-black"
                       : "text-white"
                   }`}
-                >
-                  Laporkan
-                </Link>
-              </li>
+                  >
+                    Laporkan
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
                   to="/laporan"
@@ -398,20 +400,22 @@ export default function Navbar() {
                     Beranda
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/laporkan"
-                    className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
+                {!(user && user.role === "admin") && (
+                  <li>
+                    <Link
+                      to="/laporkan"
+                      className={`block text-black font-semibold py-2 px-2 rounded transition-colors hover:bg-[#e0f7f6] hover:text-[#24BBB1] relative pb-2
                     ${
                       location.pathname === "/laporkan"
                         ? "bg-[#e0f7f6] text-[#24BBB1] font-bold"
                         : ""
                     }`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Laporkan
-                  </Link>
-                </li>
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Laporkan
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link
                     to="/laporan"
@@ -461,7 +465,7 @@ export default function Navbar() {
                     <img
                       src={user?.profileUrl || ProfileIcon}
                       alt="Profile"
-                      className="w-10 h-10 rounded-full mx-auto cursor-pointer border-2 border-[#24BBB1] shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-white"
+                      className="w-15 h-15 rounded-full mx-auto cursor-pointer border-2 border-[#24BBB1] shadow-md transition-transform duration-200 hover:scale-105 hover:shadow-lg bg-white"
                       onClick={handleMobileProfileClick}
                     />
                     {/* Dropdown Profile Drawer Mobile */}

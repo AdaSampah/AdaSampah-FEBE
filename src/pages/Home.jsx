@@ -11,7 +11,7 @@ export default function Home() {
       <HeroHome />
       <HomePerkenalan />
       <HomeMisiKami />
-      <CaraMelindungiAlamHome />s
+      <CaraMelindungiAlamHome />
       <Quotes />
       <HomeInvitation />
     </>

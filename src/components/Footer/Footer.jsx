@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import logowhite from "../../assets/Footer/logo-white.svg";
 import FBLogo from "../../assets/Footer/FBLogo.svg";
 import IGLogo from "../../assets/Footer/IGLogo.svg";
@@ -7,8 +7,11 @@ import YtbLogo from "../../assets/Footer/YtbLogo.svg";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMdMail } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 
 export default function Footer() {
+  const { user } = useContext(UserContext);
+
   return (
     <footer className="mt-20">
       <div className="bg-[rgb(18,18,18)] py-20 md:px-40 sm:px-20 px-6">
@@ -40,9 +43,11 @@ export default function Footer() {
               <Link to="/">
                 <p className="mb-2 md:mb-3">Beranda</p>
               </Link>
-              <Link to="/laporkan">
-                <p className="mb-2 md:mb-3">Laporkan</p>
-              </Link>
+              {!(user && user.role === "admin") && (
+                <Link to="/laporkan">
+                  <p className="mb-2 md:mb-3">Laporkan</p>
+                </Link>
+              )}
               <Link to="/laporan">
                 <p className="mb-2 md:mb-3">Laporan</p>
               </Link>

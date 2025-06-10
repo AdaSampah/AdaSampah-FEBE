@@ -297,7 +297,43 @@ export default function FormLaporkan() {
                 Ambil Gambar
               </button>
             </div>
-            {imgSource === "galeri" ? (
+            {/* Ganti: jika file sudah ada, tampilkan preview menggantikan kotak input */}
+            {imgSource === "galeri" && file ? (
+              <div className="flex justify-center w-full mb-4">
+                <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="BuktiFoto"
+                    className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
+                  />
+                  <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
+                      title="Hapus Gambar"
+                    >
+                      <FiTrash2 size={18} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current.click()}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
+                      title="Edit Gambar"
+                    >
+                      <FiEdit2 size={18} />
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      id="editGambar"
+                      className="hidden"
+                      onChange={handleFileInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : imgSource === "galeri" ? (
               <label htmlFor="imageLaporkan">
                 <div className="transition-slide-up">
                   <div
@@ -370,42 +406,6 @@ export default function FormLaporkan() {
                         height={480}
                       />
                     </div>
-                  </div>
-                </div>
-              </div>
-            )}
-            {file && imgSource === "galeri" && (
-              <div className="flex justify-center w-full mb-4">
-                <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt="BuktiFoto"
-                    className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
-                  />
-                  <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      type="button"
-                      onClick={handleRemoveImage}
-                      className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow"
-                      title="Hapus Gambar"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current.click()}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white rounded-full p-2 shadow"
-                      title="Edit Gambar"
-                    >
-                      <FiEdit2 size={18} />
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      id="editGambar"
-                      className="hidden"
-                      onChange={handleFileInputChange}
-                    />
                   </div>
                 </div>
               </div>
