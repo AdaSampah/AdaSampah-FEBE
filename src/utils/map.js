@@ -233,22 +233,27 @@ export const addMarker = (
   });
 
   // Menambahkan tooltip (label) dengan kategori di marker
-  newMarker
-    .bindTooltip(markerOptions.alt, { permanent: false, direction: "top" })
-    .openTooltip();
+  newMarker.bindTooltip(markerOptions.alt, {
+    permanent: false,
+    direction: "top",
+  });
 
   // Menambahkan pop-up jika popupOptions diberikan
   if (popupOptions) {
+    let popupContent = popupOptions.content || null;
+    if (!popupContent) {
+      popupContent = `
+        <b>${popupOptions}</b><br>
+        Kategori: ${markerOptions.alt}
+      `;
+    }
     const newPopup = L.popup(popupOptions);
     newPopup.setLatLng(coordinates);
-    newPopup.setContent(`
-      <b>${popupOptions}</b><br>
-      Kategori: ${markerOptions.alt}  <!-- Menampilkan kategori -->
-    `);
+    newPopup.setContent(popupContent);
     newMarker.bindPopup(newPopup);
   }
 
-  newMarker.addTo(mapInstance); // Pastikan marker ini ditambahkan ke peta yang valid
+  newMarker.addTo(mapInstance);
 
   return newMarker;
 };

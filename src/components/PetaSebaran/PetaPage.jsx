@@ -35,9 +35,26 @@ const PetaPage = () => {
       const lon = parseFloat(laporan.lon);
 
       if (!isNaN(lat) && !isNaN(lon)) {
-        Map.addMarker(mapInstance, [lat, lon], {
-          alt: laporan.location,
-        });
+        // Hanya popup, tanpa tooltip
+        const popupContent = `
+          <div style="min-width:120px">
+            <b>${laporan.location || "Lokasi tidak diketahui"}</b><br/>
+            <a href="/laporan/${
+              laporan._id
+            }" style="color:#129990;text-decoration:underline;">Lihat Detail</a>
+          </div>
+        `;
+        Map.addMarker(
+          mapInstance,
+          [lat, lon],
+          {}, // hilangkan alt agar tidak ada tooltip
+          {
+            autoClose: true,
+            closeOnClick: true,
+            className: "custom-popup",
+            content: popupContent,
+          }
+        );
       } else {
         console.log(
           `Koordinat tidak valid untuk laporan dengan ID: ${laporan.id}`
