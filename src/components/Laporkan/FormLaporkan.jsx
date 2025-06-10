@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Navigate } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
 import { FaCamera } from "react-icons/fa"; // Import React Icon untuk kamera
 import { FiTrash2, FiEdit2 } from "react-icons/fi";
 import { createMap, getCurrentPosition, addMarker } from "../../utils/map";
@@ -13,12 +14,14 @@ import { toast } from "react-hot-toast";
 import { ImSpinner2 } from "react-icons/im";
 
 export default function FormLaporkan() {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
-  const [redirect, setRedirect] = useState(false); // Tambahkan state redirect
+  const [redirect, setRedirect] = useState(false);
   const mapRef = useRef(null);
   const [markerInstance, setMarkerInstance] = useState(null);
   const fileInputRef = useRef(null);
@@ -85,6 +88,11 @@ export default function FormLaporkan() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!user) {
+      toast.error("Silakan login terlebih dahulu untuk mengirim laporan.");
+      setTimeout(() => navigate("/login", { replace: true }), 1200);
+      return;
+    }
     setLoading(true);
     const validationErrors = validateAll();
     if (Object.keys(validationErrors).length > 0) {
