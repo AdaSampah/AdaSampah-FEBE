@@ -25,10 +25,13 @@ export function stopAllStreams() {
   }
 
   window.currentStreams.forEach((stream) => {
-    if (stream.active) {
+    // Tambahkan pengecekan stream && typeof stream.getTracks === 'function'
+    if (stream && typeof stream.getTracks === "function" && stream.active) {
       stream.getTracks().forEach((track) => track.stop());
     }
   });
+  // Setelah stop, kosongkan array agar tidak error di pemanggilan berikutnya
+  window.currentStreams = [];
 }
 
 function initialListener() {

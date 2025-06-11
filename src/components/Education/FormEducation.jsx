@@ -19,6 +19,12 @@ export default function FormEducation() {
   const videoRef = useRef(null);
   const selectCameraRef = useRef(null);
   const canvasRef = useRef(null);
+  const [showImageActions, setShowImageActions] = useState(false);
+  const [canHover, setCanHover] = useState(true);
+
+  useEffect(() => {
+    setCanHover(window.matchMedia("(hover: hover)").matches);
+  }, []);
 
   // Inisialisasi kamera saat imgSource === 'camera'
   useEffect(() => {
@@ -157,13 +163,27 @@ export default function FormEducation() {
                   Foto Sampah
                 </p>
                 <div className="flex justify-center w-full mb-4">
-                  <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                  <div
+                    className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group"
+                    onClick={() => setShowImageActions((v) => !v)}
+                    onMouseLeave={() => setShowImageActions(false)}
+                  >
                     <img
                       src={URL.createObjectURL(file)}
                       alt="BuktiFoto"
                       className="max-h-[240px] mx-auto object-contain rounded-xl border border-[#e0f7f6] bg-white"
                     />
-                    <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div
+                      className={`absolute top-2 right-2 flex gap-2 z-10 transition-opacity ${
+                        canHover
+                          ? "md:opacity-0 md:group-hover:opacity-100"
+                          : ""
+                      } ${
+                        showImageActions || (canHover && false)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      }`}
+                    >
                       <button
                         type="button"
                         onClick={handleRemoveImage}

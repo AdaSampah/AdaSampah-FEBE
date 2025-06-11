@@ -5,9 +5,11 @@ import { axiosInstance } from "../../config"; // Import axiosInstance
 const PetaPage = () => {
   const [map, setMap] = useState(null);
   const [laporanData, setLaporanData] = useState([]); // State untuk data laporan dari API
+  const [isLoading, setIsLoading] = useState(true); // State untuk menampilkan spinner loading
 
   // Inisialisasi peta
   const initialMap = async () => {
+    setIsLoading(true);
     const mapInstance = await Map.createMap("#map", {
       zoom: 11,
       center: [-7.7944973, 110.4070047],
@@ -16,7 +18,8 @@ const PetaPage = () => {
 
     setMap(mapInstance);
     console.log("Peta sudah diinisialisasi"); // Debugging peta terinisialisasi
-    addMarkers(mapInstance); // Menambahkan marker setelah peta siap
+    addMarkers(mapInstance);
+    setIsLoading(false);
   };
 
   // Memanggil data laporan dari backend
@@ -80,11 +83,21 @@ const PetaPage = () => {
         <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-extrabold text-black mb-6 tracking-tight drop-shadow-sm">
           Peta Sebaran
         </h2>
-        <div className="reports-list__map__container">
+        <div className="reports-list__map__container relative">
           <div
             id="map"
             className="reports-list__map mx-auto border-2 border-gray-300 rounded-lg shadow-lg min-h-[180px] sm:min-h-[220px] md:min-h-[400px] lg:min-h-[520px] xl:min-h-[600px] h-[50vw] md:h-[32vw] lg:h-[28vw] max-h-[700px] w-full aspect-[3/1]"
           ></div>
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-20">
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#129990]" />
+                <span className="text-[#129990] font-semibold">
+                  Memuat peta...
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

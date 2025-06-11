@@ -1,7 +1,10 @@
 import Invitation from "../../assets/Home/invitation.png";
 import { FaArrowRight } from "react-icons/fa";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 export default function HomeInvitation() {
+  const { user } = useContext(UserContext);
   return (
     <section className="mt-12 sm:mt-16 md:mt-24 flex flex-col md:flex-row gap-8 md:gap-[40px] lg:gap-[75px] items-center justify-center w-full px-4 md:px-8 lg:px-0">
       <div className="w-full max-w-[180px] sm:max-w-[220px] md:max-w-[260px] lg:max-w-[350px] xl:max-w-[400px] flex-shrink-0 flex justify-center mb-6 md:mb-0">
@@ -22,13 +25,15 @@ export default function HomeInvitation() {
           sehat!
         </p>
         <div className="w-full flex justify-center md:justify-start">
-          <a
-            href="/laporkan"
-            className="flex items-center gap-2 pl-5 pr-4 py-3 mt-2 bg-[#096B68] rounded-[40px] hover:bg-[#075A57] text-[16px] text-white transition-colors duration-200 shadow-md"
-          >
-            Laporkan sekarang
-            <FaArrowRight className="text-xl sm:text-2xl p-2 bg-[#FFFBDE] rounded-full text-black ml-2" />
-          </a>
+          {!(user && user.role === "admin") && (
+            <a
+              href="/laporkan"
+              className="flex items-center gap-2 pl-5 pr-4 py-3 mt-2 bg-[#096B68] rounded-[40px] hover:bg-[#075A57] text-[16px] text-white transition-colors duration-200 shadow-md"
+            >
+              Laporkan sekarang
+              <FaArrowRight className="text-xl sm:text-2xl p-2 bg-[#FFFBDE] rounded-full text-black ml-2" />
+            </a>
+          )}
         </div>
       </div>
     </section>

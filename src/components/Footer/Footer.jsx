@@ -55,7 +55,7 @@ export default function Footer() {
                 <p className="mb-2 md:mb-3">Peta Sebaran</p>
               </Link>
               <Link to="/education">
-                <p className="mb-2 md:mb-3">Kenali Samphamu</p>
+                <p className="mb-2 md:mb-3">Kenali Sampahmu</p>
               </Link>
             </div>
           </div>

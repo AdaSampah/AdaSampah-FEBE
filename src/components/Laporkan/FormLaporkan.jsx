@@ -9,7 +9,7 @@ import addPhoto from "../../assets/Laporkan/addPhoto.svg";
 import send from "../../assets/Laporkan/send.svg";
 import lokasi from "../../assets/Laporkan/tanda.svg";
 import * as cameraUtils from "../../utils/camera";
-import { axiosInstance } from "../../config";
+import { axiosInstance, mlAxiosInstance } from "../../config";
 import { toast } from "react-hot-toast";
 import { ImSpinner2 } from "react-icons/im";
 
@@ -41,6 +41,11 @@ export default function FormLaporkan() {
     longitude: false,
     file: false,
   });
+  const [showImageActions, setShowImageActions] = useState(false);
+  const [canHover, setCanHover] = useState(true);
+  useEffect(() => {
+    setCanHover(window.matchMedia("(hover: hover)").matches);
+  }, []);
 
   // Real-time validation hanya jika sudah pernah disentuh
   useEffect(() => {
@@ -98,6 +103,46 @@ export default function FormLaporkan() {
     if (Object.keys(validationErrors).length > 0) {
       setLoading(false);
       focusFirstError(validationErrors);
+      return;
+    }
+
+    // ML API check before submit
+    try {
+      const mlFormData = new FormData();
+      if (file) mlFormData.append("image", file);
+      const mlResponse = await mlAxiosInstance.post(
+        "/predictModel1",
+        mlFormData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      const mlResult = mlResponse.data;
+      if (!mlResult.success) {
+        toast.error("Gagal memproses gambar. Silakan coba lagi.");
+        setLoading(false);
+        return;
+      }
+      if (mlResult.predictedLabel === "bersih") {
+        toast.error(
+          "Laporan tidak dapat dikirim karena gambar terdeteksi sebagai area bersih. Mohon unggah gambar area yang menunjukkan sampah atau area kotor."
+        );
+        setLoading(false);
+        return;
+      }
+      if (mlResult.predictedLabel === "tidak dapat diidentifikasi") {
+        toast.error(
+          "Sistem tidak dapat mengidentifikasi kondisi pada gambar. Silakan unggah gambar yang lebih jelas."
+        );
+        setLoading(false);
+        return;
+      }
+      // Jika kotor, lanjutkan proses submit laporan
+    } catch (mlErr) {
+      toast.error(
+        "Terjadi kesalahan saat memproses gambar. Silakan coba lagi."
+      );
+      setLoading(false);
       return;
     }
 
@@ -308,13 +353,30 @@ export default function FormLaporkan() {
             {/* Ganti: jika file sudah ada, tampilkan preview menggantikan kotak input */}
             {imgSource === "galeri" && file ? (
               <div className="flex justify-center w-full mb-4">
-                <div className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group">
+                <div
+                  className="relative inline-block rounded-xl border border-[#e0f7f6] bg-white overflow-hidden group"
+                  onClick={() => setShowImageActions((v) => !v)}
+                  onMouseLeave={() => setShowImageActions(false)}
+                >
                   <img
                     src={URL.createObjectURL(file)}
                     alt="BuktiFoto"
                     className="w-full max-h-[400px] object-cover rounded-xl border border-[#e0f7f6] bg-white"
                   />
-                  <div className="absolute top-2 right-2 flex gap-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div
+                    className={`absolute top-2 right-2 flex gap-2 z-10 transition-opacity
+                      ${
+                        canHover
+                          ? "md:opacity-0 md:group-hover:opacity-100"
+                          : ""
+                      }
+                      ${
+                        showImageActions || (canHover && false)
+                          ? "opacity-100"
+                          : "opacity-0"
+                      }
+                    `}
+                  >
                     <button
                       type="button"
                       onClick={handleRemoveImage}

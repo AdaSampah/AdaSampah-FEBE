@@ -11,11 +11,13 @@ import Bukti from "../../assets/DetilLaporan/bukti.jpg";
 import { axiosInstance } from "../../config";
 import { UserContext } from "../../context/UserContext";
 import { toast } from "react-hot-toast";
+import { ImSpinner2 } from "react-icons/im";
 
 const DetailKiri = ({ detailLaporan }) => {
   const { user } = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [imgLoading, setImgLoading] = useState(true);
 
   let StatusSekarang = "";
   if (detailLaporan?.status?.length) {
@@ -147,12 +149,25 @@ const DetailKiri = ({ detailLaporan }) => {
             </p>
           </div>
 
-          <img
-            src={detailLaporan?.photoUrl}
-            alt="buktiFoto"
-            className="w-full aspect-[4/3] object-cover  max-h-96 md:rounded-2xl rounded-xl cursor-pointer"
-            onClick={() => openModal(detailLaporan?.photoUrl)}
-          />
+          <div className="relative">
+            <img
+              src={detailLaporan?.photoUrl}
+              alt="buktiFoto"
+              className="w-full aspect-[4/3] object-cover  max-h-96 md:rounded-2xl rounded-xl cursor-pointer"
+              onClick={() => openModal(detailLaporan?.photoUrl)}
+              onLoad={() => setImgLoading(false)}
+              onError={() => setImgLoading(false)}
+              style={{
+                opacity: imgLoading ? 0 : 1,
+                transition: "opacity 0.3s",
+              }}
+            />
+            {imgLoading && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <ImSpinner2 className="animate-spin text-3xl text-[#129990]" />
+              </div>
+            )}
+          </div>
 
           <div className="flex items-center justify-between mt-4">
             <div className="cursor-pointer flex gap-4 items-center text-body text-[#5B5B5B]">
@@ -177,11 +192,24 @@ const DetailKiri = ({ detailLaporan }) => {
               >
                 &times;
               </span>
-              <img
-                src={detailLaporan?.photoUrl}
-                alt="modalImage"
-                className="rounded-lg w-full max-h-[500px] object-cover"
-              />
+              <div className="relative">
+                <img
+                  src={detailLaporan?.photoUrl}
+                  alt="modalImage"
+                  className="rounded-lg w-full max-h-[500px] object-cover"
+                  onLoad={() => setImgLoading(false)}
+                  onError={() => setImgLoading(false)}
+                  style={{
+                    opacity: imgLoading ? 0 : 1,
+                    transition: "opacity 0.3s",
+                  }}
+                />
+                {imgLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <ImSpinner2 className="animate-spin text-3xl text-[#129990]" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

@@ -126,10 +126,12 @@ const MapSection = ({ latitude, longitude }) => {
 
         {/* Loading Overlay */}
         {(isLoading || !mapLoaded) && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center transition-opacity duration-300 z-20">
             <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-              <span className="text-gray-600">Memuat peta...</span>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#129990]"></div>
+              <span className="text-[#129990] font-semibold">
+                Memuat peta...
+              </span>
             </div>
           </div>
         )}

@@ -27,7 +27,9 @@ export const Laporan = () => {
         const total = data.totalPages;
 
         const uniqueUserIds = [...new Set(reports.map((item) => item.userId))];
-        const userPromises = uniqueUserIds.map((id) => axiosInstance.get(`/user/${id}`).then((res) => res.data.data));
+        const userPromises = uniqueUserIds.map((id) =>
+          axiosInstance.get(`/user/${id}`).then((res) => res.data.data)
+        );
         const usersData = await Promise.all(userPromises);
 
         const userMap = {};
@@ -59,8 +61,16 @@ export const Laporan = () => {
   return (
     <>
       <HeroLaporan setSearchParams={setSearchParams} />
-      <LaporanSection searchParams={searchParams} dataSampah={dataSampah} isLoading={isLoading} />
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <LaporanSection
+        searchParams={searchParams}
+        dataSampah={dataSampah}
+        isLoading={isLoading}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </>
   );
 };
