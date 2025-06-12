@@ -8,5 +8,4 @@ export const mlAxiosInstance = axios.create({
   baseURL: "https://adasampah-ml-be-production.up.railway.app",
 });
 
-export const MAP_SERVICE_API_KEY = "t4KoKVORHKjBl7Y8myEK";
-export const BASE_URL = "https://citycare-api.dicoding.dev/v1";
+export const MAP_SERVICE_API_KEY = import.meta.env.VITE_MAP_SERVICE_API_KEY;
